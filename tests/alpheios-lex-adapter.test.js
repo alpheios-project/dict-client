@@ -34,4 +34,19 @@ describe('BaseAdapter object', () => {
       expect(adapter.data).toBeTruthy()
     })
   })
+
+  test('lookup enforced capital', () => {
+    let adapter = new AlpheiosLexAdapter('lsj')
+    let dummyResponse = '@Εὐκράς|n44301\n@εὐκτέανος1|n44329\n@εὐκτέανος2|n44330\nεὐκράς1|@\nεὐκράς2|@\nεὐκράς|@\nεὐκτέανος2|@\nnontrailing|n99999'
+    window.fetch.mockResponse(dummyResponse)
+    adapter.lookupShortDef('Εὐκράς').then((response) => {
+      expect(response).toEqual('n44301')
+    })
+    adapter.lookupShortDef('εὐκτέανος2').then((response) => {
+      expect(response).toEqual('n44330')
+    })
+    adapter.lookupShortDef('nontrailing1').then((response) => {
+      expect(response).toEqual('n99999')
+    })
+  })
 })
