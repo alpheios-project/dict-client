@@ -2,12 +2,12 @@
  * Base Adapter Class for a Dictionary Service
  */
 class BaseDictAdapter {
-  async lookupShortDef(lemma) {
+  async lookupShortDef (lemma) {
 
   }
 
-  async lookupFullDef(lemma) {
-    
+  async lookupFullDef (lemma) {
+
   }
 }
 
@@ -1604,15 +1604,30 @@ var papaparse = createCommonjsModule(function (module, exports) {
 const Config = {
   lsj: {
     short: 'https://raw.githubusercontent.com/alpheios-project/lsj/master/dat/grc-lsj-defs.dat',
-    long: 'http://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=sal&lg=ara&out=html&l=R_LEMMA'
+    long: 'http://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=lsj&lg=grc&out=html&l=r_LEMMA'
   }
 };
 
 class AlpheiosLexAdapter extends BaseDictAdapter {
-  constructor (lexid = null) {
+  constructor (lexid = null, config = Config[lexid]) {
     super();
     this.lexid = lexid;
     this.data = null;
+    this.config = config;
+  }
+
+  lookupFullDef (lemma = null) {
+    let url = this.getConfig('long').replace('r_LEMMA', lemma);
+    return new Promise((resolve, reject) => {
+      window.fetch(url).then(
+          function (response) {
+            let text = response.text();
+            resolve(text);
+          }
+        ).catch((error) => {
+          reject(error);
+        });
+    })
   }
 
   async lookupShortDef (lemma = null) {
@@ -1642,7 +1657,7 @@ class AlpheiosLexAdapter extends BaseDictAdapter {
   }
 
   getConfig (property) {
-    return Config[this.lexid][property]
+    return this.config[property]
   }
 }
 

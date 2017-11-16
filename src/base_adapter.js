@@ -2,12 +2,12 @@
  * Base Adapter Class for a Dictionary Service
  */
 class BaseDictAdapter {
-  async lookupShortDef(lemma) {
+  async lookupShortDef (lemma) {
 
   }
 
-  async lookupFullDef(lemma) {
-    
+  async lookupFullDef (lemma) {
+
   }
 }
 

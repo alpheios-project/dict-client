@@ -1,12 +1,27 @@
 import BaseDictAdapter from './base_adapter.js'
 import papaparse from 'papaparse'
-import * as Config from './config.js'
+import * as Defaults from './config.js'
 
 class AlpheiosLexAdapter extends BaseDictAdapter {
-  constructor (lexid = null) {
+  constructor (lexid = null, config = Defaults.Config[lexid]) {
     super()
     this.lexid = lexid
     this.data = null
+    this.config = config
+  }
+
+  lookupFullDef (lemma = null) {
+    let url = this.getConfig('long').replace('r_LEMMA', lemma)
+    return new Promise((resolve, reject) => {
+      window.fetch(url).then(
+          function (response) {
+            let text = response.text()
+            resolve(text)
+          }
+        ).catch((error) => {
+          reject(error)
+        })
+    })
   }
 
   async lookupShortDef (lemma = null) {
@@ -36,7 +51,7 @@ class AlpheiosLexAdapter extends BaseDictAdapter {
   }
 
   getConfig (property) {
-    return Config.Config[this.lexid][property]
+    return this.config[property]
   }
 }
 
