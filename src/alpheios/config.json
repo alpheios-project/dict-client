@@ -1,0 +1,28 @@
+{
+  "http://github.com/alpheios-projec/lsj": {
+    "urls": {
+      "short": "https://raw.githubusercontent.com/alpheios-project/lsj/master/dat/grc-lsj-defs.dat",
+      "index": "https://raw.githubusercontent.com/alpheios-project/lsj/master/dat/grc-lsj-ids.dat",
+      "full": "http://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=lsj&lg=grc&out=html"
+    },
+    "langs": {
+      "source": "grc",
+      "target": "en"
+    },
+    "description": "\"A Greek-English Lexicon\" (Henry George Liddell, Robert Scott",
+    "rights": "From \"A Greek-English Lexicon\" (Henry George Liddell, Robert Scott"
+  },
+  "https://github.com/alpheios-project/ls": {
+    "urls": {
+      "short": null,
+      "index": "https://raw.githubusercontent.com/alpheios-project/ls/master/dat/lat-ls-ids.dat",
+      "full": "http://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=ls&lg=lat&out=html"
+    },
+    "langs": {
+      "source": "lat",
+      "target": "en"
+    },
+    "description": "\"A Latin Dictionary\" (Charlton T. Lewis, Charles Short)",
+    "rights": "From \"A Latin Dictionary\" (Charlton T. Lewis, Charles Short)"
+  }
+}

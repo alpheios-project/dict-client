@@ -19,6 +19,16 @@ class BaseLexiconAdapter {
   async lookupFullDef (lemma) {
     throw new Error('Unimplemented')
   }
+
+  /**
+   * Get the available lexicons provided by this adapter class for the
+   * requested language
+   * @param {string} language languageCode
+   * @return {Array} a Map of lexicon objects. Keys are lexicon uris, values are the lexicon description.
+   */
+  static getLexicons (language) {
+    return []
+  }
 }
 
 export default BaseLexiconAdapter

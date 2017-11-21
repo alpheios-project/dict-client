@@ -1,6 +1,7 @@
 /* eslint-env jest */
 'use strict'
-import AlpheiosLexAdapter from '../src/alpheios_adapter.js'
+import AlpheiosLexAdapter from '../../src/alpheios/alpheios_adapter.js'
+let lsj = 'https://github.com/alpheios-project/lsj'
 
 describe('BaseAdapter object', () => {
   beforeAll(() => {
@@ -8,13 +9,20 @@ describe('BaseAdapter object', () => {
   })
 
   test('default config', () => {
-    let adapter = new AlpheiosLexAdapter('lsj')
+    let adapter = new AlpheiosLexAdapter(lsj)
     expect(adapter.getConfig('urls').short).toBeTruthy()
   })
 
   test('default config', () => {
-    let adapter = new AlpheiosLexAdapter('lsj', {urls: {short: 'dummyurl'}})
+    let adapter = new AlpheiosLexAdapter(lsj, {urls: {short: 'dummyurl'}})
     expect(adapter.getConfig('urls').short).toEqual('dummyurl')
+  })
+
+  test('get lexicons', () => {
+    let latin = AlpheiosLexAdapter.getLexicons('lat')
+    expect(latin.size).toEqual(1)
+    console.log(latin)
+    expect(latin.get('https://github.com/alpheios-project/ls')).toBeTruthy()
   })
 
   test('getShortDef', async () => {
@@ -24,7 +32,7 @@ describe('BaseAdapter object', () => {
       principalParts: []
     }
     let mockDefinition = 'short definition'
-    let adapter = new AlpheiosLexAdapter('lsj')
+    let adapter = new AlpheiosLexAdapter(lsj)
     let dummyResponse = `mare|${mockDefinition}`
     window.fetch.mockResponse(dummyResponse)
     let response = await adapter.lookupShortDef(mockLemma)
@@ -38,7 +46,7 @@ describe('BaseAdapter object', () => {
       language: 'lat',
       principalParts: []
     }
-    let adapter = new AlpheiosLexAdapter('lsj')
+    let adapter = new AlpheiosLexAdapter(lsj)
     let dummyResponse = '<div n="abc">my def</div>'
     window.fetch.mockResponse(dummyResponse)
     let response = await adapter.lookupFullDef(mockLemma)
@@ -51,7 +59,7 @@ describe('BaseAdapter object', () => {
       language: 'lat',
       principalParts: []
     }
-    let adapter = new AlpheiosLexAdapter('lsj')
+    let adapter = new AlpheiosLexAdapter(lsj)
     let dummyResponse = {'foo': 'bar'}
     window.fetch.mockResponse(JSON.stringify(dummyResponse))
     await adapter.lookupShortDef(mockLemma)
@@ -74,7 +82,7 @@ describe('BaseAdapter object', () => {
       language: 'grc',
       principalParts: []
     }
-    let adapter = new AlpheiosLexAdapter('lsj')
+    let adapter = new AlpheiosLexAdapter(lsj)
     let dummyResponse = '@Εὐκράς|n44301\n@εὐκτέανος1|n44329\n@εὐκτέανος2|n44330\nεὐκράς1|@\nεὐκράς2|@\nεὐκράς|@\nεὐκτέανος2|@\nnontrailing|n99999'
     expect.assertions(3)
     window.fetch.mockResponse(dummyResponse)

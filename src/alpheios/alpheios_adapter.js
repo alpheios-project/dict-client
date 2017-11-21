@@ -1,11 +1,11 @@
-import BaseLexiconAdapter from './base_adapter.js'
+import BaseLexiconAdapter from '../base_adapter.js'
 import papaparse from 'papaparse'
 import { Definition, ResourceProvider } from 'alpheios-data-models'
 import DefaultConfig from './config.json'
 
 class AlpheiosLexAdapter extends BaseLexiconAdapter {
   /**
-   * A Client Adapter for the Alpheios Lexicon service
+   * A Client Adapter for the Alpheios V1 Lexicon service
    * @constructor
    * @param {string} lexid - the idenitifer code for the lexicon this instance
    *                         provides access to
@@ -31,7 +31,7 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
     } else {
       this.config = config
     }
-    this.provider = new ResourceProvider(this.config.uri, this.config.rights)
+    this.provider = new ResourceProvider(this.lexid, this.config.rights)
   }
 
   /**
@@ -49,7 +49,7 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
     if (this.index) {
       id = this._lookupInDataIndex(this.index, lemma)
     }
-    let url = this.getConfig('urls').long
+    let url = this.getConfig('urls').full
     if (id) {
       url = `${url}&n=${id}`
     } else {
@@ -123,6 +123,11 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
     return found
   }
 
+  /**
+   * Loads a data file from a URL
+   * @param {string} url - the url of the file
+   * @returns {Promise} a Promise that resolves to the text contents of the loaded file
+   */
   _loadData (url) {
     // TODO figure out best way to load this data
     return new Promise((resolve, reject) => {
@@ -137,8 +142,32 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
     })
   }
 
+  /**
+   * Get a configuration setting for this lexicon client instance
+   * @param {string} property
+   * @returns {string} the value of the property
+   */
   getConfig (property) {
     return this.config[property]
+  }
+
+  /**
+   * @override BaseAdapter#getLexicons
+   */
+  static getLexicons (language) {
+    let fullconfig
+    let lexicons = new Map()
+    try {
+      fullconfig = JSON.parse(DefaultConfig)
+    } catch (e) {
+      fullconfig = DefaultConfig
+    }
+    for (let l of Object.keys(fullconfig)) {
+      if (fullconfig[l].langs.source === language) {
+        lexicons.set(l, fullconfig[l].description)
+      }
+    }
+    return lexicons
   }
 }
 export default AlpheiosLexAdapter

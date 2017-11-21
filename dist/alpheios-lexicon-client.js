@@ -5,10 +5,10 @@ class BaseLexiconAdapter {
   /**
    * Lookup a short definition in a lexicon
    * @param {Lemma} lemma Lemma to lookup
-   * @return {Definition} a Definition object
+   * @return {Promise} a Promise that resolves to a Definition object
    */
   async lookupShortDef (lemma) {
-
+    throw new Error('Unimplemented')
   }
 
   /**
@@ -17,7 +17,17 @@ class BaseLexiconAdapter {
    * @return {Promise} a Promise that resovles to a Definition object
    */
   async lookupFullDef (lemma) {
+    throw new Error('Unimplemented')
+  }
 
+  /**
+   * Get the available lexicons provided by this adapter class for the
+   * requested language
+   * @param {string} language languageCode
+   * @return {Array} a Map of lexicon objects. Keys are lexicon uris, values are the lexicon description.
+   */
+  static getLexicons (language) {
+    return []
   }
 }
 
@@ -2021,11 +2031,54 @@ class Definition {
   }
 }
 
-var DefaultConfig = "{\n  \"lsj\": {\n    \"shortUrl\": \"https://raw.githubusercontent.com/alpheios-project/lsj/master/dat/grc-lsj-defs.dat\",\n    \"indexUrl\": \"https://raw.githubusercontent.com/alpheios-project/lsj/master/dat/grc-lsj-ids.dat\",\n    \"longLemmaUrl\": \"http://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=lsj&lg=grc&out=html&l=r_LEMMA\",\n    \"longIdUrl\": \"http://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=lsj&lg=grc&out=html&n=r_ID\",\n    \"sourceLang\": \"grc\",\n    \"targetLang\": \"en\",\n    \"sourceCredit\": \"Definitions provided by LSJ\"\n  }\n}\n";
+/**
+ * An abstraction of an Alpheios resource provider
+ */
+class ResourceProvider {
+  /**
+   * @constructor
+   * @param {string} uri - a unique resource identifier for this provider
+   * @param {string} rights - rights text
+   * @param {Map} rightsTranslations - optional map of translated rights text - keys should be language of text, values the text
+   */
+  constructor (uri = '', rights = '', rightsTranslations = new Map([['default', rights]])) {
+    this.uri = uri;
+    this.rights = rightsTranslations;
+    if (!this.rights.has('default')) {
+      this.rights.set('default', rights);
+    }
+  }
+
+  /**
+   * @return a string representation of the resource provider, in the default language
+   */
+  toString () {
+    return this.rights.get('default')
+  }
+
+  /**
+   * Produce a string representation of the resource provider, in the requested locale if available
+   * @param {string} languageCode
+   * @return a string representation of the resource provider, in the requested locale if available
+   */
+  toLocaleString (languageCode) {
+    return this.rights.get(languageCode) || this.rights.get('default')
+  }
+
+  static getProxy (provider = null, target = {}) {
+    return new Proxy(target, {
+      get: function (target, name) {
+        return name === 'provider' ? provider : target[name]
+      }
+    })
+  }
+}
+
+var DefaultConfig = "{\n  \"http://github.com/alpheios-projec/lsj\": {\n    \"urls\": {\n      \"short\": \"https://raw.githubusercontent.com/alpheios-project/lsj/master/dat/grc-lsj-defs.dat\",\n      \"index\": \"https://raw.githubusercontent.com/alpheios-project/lsj/master/dat/grc-lsj-ids.dat\",\n      \"full\": \"http://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=lsj&lg=grc&out=html\"\n    },\n    \"langs\": {\n      \"source\": \"grc\",\n      \"target\": \"en\"\n    },\n    \"description\": \"\\\"A Greek-English Lexicon\\\" (Henry George Liddell, Robert Scott\",\n    \"rights\": \"From \\\"A Greek-English Lexicon\\\" (Henry George Liddell, Robert Scott\"\n  },\n  \"https://github.com/alpheios-project/ls\": {\n    \"urls\": {\n      \"short\": null,\n      \"index\": \"https://raw.githubusercontent.com/alpheios-project/ls/master/dat/lat-ls-ids.dat\",\n      \"full\": \"http://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=ls&lg=lat&out=html\"\n    },\n    \"langs\": {\n      \"source\": \"lat\",\n      \"target\": \"en\"\n    },\n    \"description\": \"\\\"A Latin Dictionary\\\" (Charlton T. Lewis, Charles Short)\",\n    \"rights\": \"From \\\"A Latin Dictionary\\\" (Charlton T. Lewis, Charles Short)\"\n  }\n}\n";
 
 class AlpheiosLexAdapter extends BaseLexiconAdapter {
   /**
-   * A Client Adapter for the Alpheios Lexicon service
+   * A Client Adapter for the Alpheios V1 Lexicon service
    * @constructor
    * @param {string} lexid - the idenitifer code for the lexicon this instance
    *                         provides access to
@@ -2051,6 +2104,7 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
     } else {
       this.config = config;
     }
+    this.provider = new ResourceProvider(this.lexid, this.config.rights);
   }
 
   /**
@@ -2058,8 +2112,8 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
    */
   async lookupFullDef (lemma = null) {
     // TODO figure out the best way to handle initial reading of the data file
-    if (this.index === null && this.getConfig('indexUrl')) {
-      let url = this.getConfig('indexUrl');
+    if (this.index === null && this.getConfig('urls').index) {
+      let url = this.getConfig('urls').index;
       let unparsed = await this._loadData(url);
       let parsed = papaparse.parse(unparsed, {});
       this.index = new Map(parsed.data);
@@ -2068,14 +2122,13 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
     if (this.index) {
       id = this._lookupInDataIndex(this.index, lemma);
     }
-    let url;
+    let url = this.getConfig('urls').full;
     if (id) {
-      url = this.getConfig('longIdUrl').replace('r_ID', id);
+      url = `${url}&n=${id}`;
     } else {
-      url = this.getConfig('longLemmaUrl').replace('r_LEMMA', lemma.word);
+      url = `${url}&l=${lemma.word}`;
     }
-    let targetLanguage = this.getConfig('targetLang');
-    let sourceCredit = this.getConfig('sourceCredit');
+    let targetLanguage = this.getConfig('langs').target;
     let p = new Promise((resolve, reject) => {
       window.fetch(url).then(
           function (response) {
@@ -2086,7 +2139,10 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
           reject(error);
         });
     });
-    return p.then((result) => { return new Definition(result, targetLanguage, 'text/html', sourceCredit) })
+    return p.then((result) => {
+      let def = new Definition(result, targetLanguage, 'text/html');
+      return ResourceProvider.getProxy(this.provider, def)
+    })
   }
 
   /**
@@ -2094,14 +2150,15 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
    */
   async lookupShortDef (lemma = null) {
     if (this.data === null) {
-      let url = this.getConfig('shortUrl');
+      let url = this.getConfig('urls').short;
       let unparsed = await this._loadData(url);
       let parsed = papaparse.parse(unparsed, {});
       this.data = new Map(parsed.data);
     }
     let deftext = this._lookupInDataIndex(this.data, lemma);
     return new Promise((resolve, reject) => {
-      resolve(new Definition(deftext, this.getConfig('targetLang'), 'text/plain', this.getConfig('sourceCredit')));
+      let def = new Definition(deftext, this.getConfig('langs').target, 'text/plain');
+      resolve(ResourceProvider.getProxy(this.provider, def));
     })
   }
 
@@ -2139,6 +2196,11 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
     return found
   }
 
+  /**
+   * Loads a data file from a URL
+   * @param {string} url - the url of the file
+   * @returns {Promise} a Promise that resolves to the text contents of the loaded file
+   */
   _loadData (url) {
     // TODO figure out best way to load this data
     return new Promise((resolve, reject) => {
@@ -2153,8 +2215,32 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
     })
   }
 
+  /**
+   * Get a configuration setting for this lexicon client instance
+   * @param {string} property
+   * @returns {string} the value of the property
+   */
   getConfig (property) {
     return this.config[property]
+  }
+
+  /**
+   * @override BaseAdapter#getLexicons
+   */
+  static getLexicons (language) {
+    let fullconfig;
+    let lexicons = new Map();
+    try {
+      fullconfig = JSON.parse(DefaultConfig);
+    } catch (e) {
+      fullconfig = DefaultConfig;
+    }
+    for (let l of Object.keys(fullconfig)) {
+      if (fullconfig[l].langs.source === language) {
+        lexicons.set(l, fullconfig[l].description);
+      }
+    }
+    return lexicons
   }
 }
 

@@ -6,7 +6,7 @@ export default {
   entry: 'src/driver.js',
   plugins: [
     string({
-      include: ['src/*.json']
+      include: ['src/**/*.json']
     }),
     commonjs({
       ignoreGlobal: true,  // Default: false
