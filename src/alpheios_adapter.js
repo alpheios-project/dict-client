@@ -39,8 +39,8 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
    */
   async lookupFullDef (lemma = null) {
     // TODO figure out the best way to handle initial reading of the data file
-    if (this.index === null && this.getConfig('indexUrl')) {
-      let url = this.getConfig('indexUrl')
+    if (this.index === null && this.getConfig('urls').index) {
+      let url = this.getConfig('urls').index
       let unparsed = await this._loadData(url)
       let parsed = papaparse.parse(unparsed, {})
       this.index = new Map(parsed.data)
@@ -49,13 +49,13 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
     if (this.index) {
       id = this._lookupInDataIndex(this.index, lemma)
     }
-    let url
+    let url = this.getConfig('urls').long
     if (id) {
-      url = this.getConfig('longIdUrl').replace('r_ID', id)
+      url = `${url}&n=${id}`
     } else {
-      url = this.getConfig('longLemmaUrl').replace('r_LEMMA', lemma.word)
+      url = `${url}&l=${lemma.word}`
     }
-    let targetLanguage = this.getConfig('targetLang')
+    let targetLanguage = this.getConfig('langs').target
     let p = new Promise((resolve, reject) => {
       window.fetch(url).then(
           function (response) {
@@ -77,14 +77,14 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
    */
   async lookupShortDef (lemma = null) {
     if (this.data === null) {
-      let url = this.getConfig('shortUrl')
+      let url = this.getConfig('urls').short
       let unparsed = await this._loadData(url)
       let parsed = papaparse.parse(unparsed, {})
       this.data = new Map(parsed.data)
     }
     let deftext = this._lookupInDataIndex(this.data, lemma)
     return new Promise((resolve, reject) => {
-      let def = new Definition(deftext, this.getConfig('targetLang'), 'text/plain')
+      let def = new Definition(deftext, this.getConfig('langs').target, 'text/plain')
       resolve(ResourceProvider.getProxy(this.provider, def))
     })
   }
