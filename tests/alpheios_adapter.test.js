@@ -17,6 +17,21 @@ describe('BaseAdapter object', () => {
     expect(adapter.getConfig('short')).toEqual('dummyurl')
   })
 
+  test('getShortDef', async () => {
+    let mockLemma = {
+      word: 'mare',
+      language: 'lat',
+      principalParts: []
+    }
+    let mockDefinition = 'short definition'
+    let adapter = new AlpheiosLexAdapter('lsj')
+    let dummyResponse = `mare|${mockDefinition}`
+    window.fetch.mockResponse(dummyResponse)
+    let response = await adapter.lookupShortDef(mockLemma)
+    expect(response.text).toEqual(mockDefinition)
+    expect(response.provider.toString()).toMatch(/Liddell/)
+  })
+
   test('getFullDef', async () => {
     let mockLemma = {
       word: 'mare',

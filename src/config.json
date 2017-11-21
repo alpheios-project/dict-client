@@ -6,6 +6,7 @@
     "longIdUrl": "http://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=lsj&lg=grc&out=html&n=r_ID",
     "sourceLang": "grc",
     "targetLang": "en",
-    "sourceCredit": "Definitions provided by LSJ"
+    "uri": "https://github.com/alpheios-project/lsj",
+    "rights": "From \"A Greek-English Lexicon\" (Henry George Liddell, Robert Scott"
   }
 }

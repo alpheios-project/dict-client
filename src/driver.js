@@ -1,2 +1,2 @@
-import AlpheiosLexAdapter from './alpheios_lex_adapter'
+import AlpheiosLexAdapter from './alpheios_adapter'
 export { AlpheiosLexAdapter }

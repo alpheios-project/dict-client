@@ -1,6 +1,6 @@
 import BaseLexiconAdapter from './base_adapter.js'
 import papaparse from 'papaparse'
-import { Definition } from 'alpheios-data-models'
+import { Definition, ResourceProvider } from 'alpheios-data-models'
 import DefaultConfig from './config.json'
 
 class AlpheiosLexAdapter extends BaseLexiconAdapter {
@@ -31,6 +31,7 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
     } else {
       this.config = config
     }
+    this.provider = new ResourceProvider(this.config.uri, this.config.rights)
   }
 
   /**
@@ -55,7 +56,6 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
       url = this.getConfig('longLemmaUrl').replace('r_LEMMA', lemma.word)
     }
     let targetLanguage = this.getConfig('targetLang')
-    let sourceCredit = this.getConfig('sourceCredit')
     let p = new Promise((resolve, reject) => {
       window.fetch(url).then(
           function (response) {
@@ -66,7 +66,10 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
           reject(error)
         })
     })
-    return p.then((result) => { return new Definition(result, targetLanguage, 'text/html', sourceCredit) })
+    return p.then((result) => {
+      let def = new Definition(result, targetLanguage, 'text/html')
+      return ResourceProvider.getProxy(this.provider, def)
+    })
   }
 
   /**
@@ -80,7 +83,10 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
       this.data = new Map(parsed.data)
     }
     let deftext = this._lookupInDataIndex(this.data, lemma)
-    return new Definition(deftext, this.getConfig('targetLang'), 'text/plain', this.getConfig('sourceCredit'))
+    return new Promise((resolve, reject) => {
+      let def = new Definition(deftext, this.getConfig('targetLang'), 'text/plain')
+      resolve(ResourceProvider.getProxy(this.provider, def))
+    })
   }
 
   /**

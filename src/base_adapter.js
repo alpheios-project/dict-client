@@ -5,10 +5,10 @@ class BaseLexiconAdapter {
   /**
    * Lookup a short definition in a lexicon
    * @param {Lemma} lemma Lemma to lookup
-   * @return {Definition} a Definition object
+   * @return {Promise} a Promise that resolves to a Definition object
    */
   async lookupShortDef (lemma) {
-
+    throw new Error('Unimplemented')
   }
 
   /**
@@ -17,7 +17,7 @@ class BaseLexiconAdapter {
    * @return {Promise} a Promise that resovles to a Definition object
    */
   async lookupFullDef (lemma) {
-
+    throw new Error('Unimplemented')
   }
 }
 
