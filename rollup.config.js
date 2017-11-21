@@ -3,7 +3,7 @@ import commonjs from 'rollup-plugin-commonjs'
 import string from 'rollup-plugin-string'
 
 export default {
-  entry: 'src/alpheios-lex-adapter.js',
+  entry: 'src/driver.js',
   plugins: [
     string({
       include: ['src/*.json']
@@ -21,7 +21,7 @@ export default {
       }
     })
   ],
-  moduleName: 'BaseDictAdapter',
+  moduleName: 'ApheiosDictClient',
   targets: [
     {
       dest: 'dist/alpheios-dict-client.js',

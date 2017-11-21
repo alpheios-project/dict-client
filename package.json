@@ -1,5 +1,5 @@
 {
-  "name": "alpheios-lex-adapter",
+  "name": "alpheios-dict-client",
   "version": "0.0.1",
   "description": "Alpheios Morphology Client Library",
   "main": "dist/alpheios-dict-client.js",
@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/alpheios-project/morph-client#readme",
   "devDependencies": {
+    "alpheios-data-models": "file:../data-models",
     "babel-jest": "^21.2.0",
     "babel-preset-es2015": "^6.24.1",
     "babyparse": "^0.4.6",
@@ -41,7 +42,7 @@
     ]
   },
   "standard": {
-    "ignore" : [
+    "ignore": [
       "dist/**"
     ]
   },
