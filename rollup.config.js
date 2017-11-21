@@ -21,10 +21,10 @@ export default {
       }
     })
   ],
-  moduleName: 'ApheiosDictClient',
+  moduleName: 'ApheiosLexiconClient',
   targets: [
     {
-      dest: 'dist/alpheios-dict-client.js',
+      dest: 'dist/alpheios-lexicon-client.js',
       format: 'es',
       sourceMap: true
     }

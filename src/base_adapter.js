@@ -1,7 +1,7 @@
 /**
- * Base Adapter Class for a Dictionary Service
+ * Base Adapter Class for a Lexicon Service
  */
-class BaseDictAdapter {
+class BaseLexiconAdapter {
   /**
    * Lookup a short definition in a lexicon
    * @param {Lemma} lemma Lemma to lookup
@@ -21,4 +21,4 @@ class BaseDictAdapter {
   }
 }
 
-export default BaseDictAdapter
+export default BaseLexiconAdapter

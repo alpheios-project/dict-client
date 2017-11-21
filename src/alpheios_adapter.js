@@ -1,9 +1,9 @@
-import BaseDictAdapter from './base_adapter.js'
+import BaseLexiconAdapter from './base_adapter.js'
 import papaparse from 'papaparse'
 import { Definition } from 'alpheios-data-models'
 import DefaultConfig from './config.json'
 
-class AlpheiosLexAdapter extends BaseDictAdapter {
+class AlpheiosLexAdapter extends BaseLexiconAdapter {
   /**
    * A Client Adapter for the Alpheios Lexicon service
    * @constructor
@@ -34,7 +34,7 @@ class AlpheiosLexAdapter extends BaseDictAdapter {
   }
 
   /**
-   * @override BaseDictAdapter#lookupFullDef
+   * @override BaseLexiconAdapter#lookupFullDef
    */
   async lookupFullDef (lemma = null) {
     // TODO figure out the best way to handle initial reading of the data file
@@ -70,7 +70,7 @@ class AlpheiosLexAdapter extends BaseDictAdapter {
   }
 
   /**
-   * @override BaseDictAdapter#lookupShortDef
+   * @override BaseLexiconAdapter#lookupShortDef
    */
   async lookupShortDef (lemma = null) {
     if (this.data === null) {

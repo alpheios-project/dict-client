@@ -1,6 +1,6 @@
 /* eslint-env jest */
 'use strict'
-import AlpheiosLexAdapter from '../src/alpheios_lex_adapter.js'
+import AlpheiosLexAdapter from '../src/alpheios_adapter.js'
 
 describe('BaseAdapter object', () => {
   beforeAll(() => {
