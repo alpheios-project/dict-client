@@ -9,8 +9,60 @@
       "source": "grc",
       "target": "en"
     },
-    "description": "\"A Greek-English Lexicon\" (Henry George Liddell, Robert Scott",
-    "rights": "From \"A Greek-English Lexicon\" (Henry George Liddell, Robert Scott"
+    "description": "\"A Greek-English Lexicon\" (Henry George Liddell, Robert Scott)",
+    "rights": "From \"A Greek-English Lexicon\" (Henry George Liddell, Robert Scott)"
+  },
+  "https://github.com/alpheios-project/aut": {
+    "urls": {
+      "short": "https://raw.githubusercontent.com/alpheios-project/aut/master/dat/grc-aut-defs.dat",
+      "index": "https://raw.githubusercontent.com/alpheios-project/aut/master/dat/grc-aut-ids.dat",
+      "full": "http://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=aut&lg=grc&out=html"
+    },
+    "langs": {
+      "source": "grc",
+      "target": "en"
+    },
+    "description": "\"Autenrieth Homeric Dictionary\" (Geoerge Autenrieth)",
+    "rights": "From \"Autenrieth Homeric Dictionary\" (Geoerge Autenrieth)"
+  },
+  "https://github.com/alpheios-project/ml": {
+    "urls": {
+      "short": "https://raw.githubusercontent.com/alpheios-project/ml/master/dat/grc-ml-defs.dat",
+      "index": "https://raw.githubusercontent.com/alpheios-project/ml/master/dat/grc-ml-ids.dat",
+      "full": "http://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=ml&lg=grc&out=html"
+    },
+    "langs": {
+      "source": "grc",
+      "target": "en"
+    },
+    "description": "\"Middle Liddell\"",
+    "rights": "From \"An Intermediate Greek-English Lexicon\" (Henry George Liddell, Robert Scott)"
+  },
+  "https://github.com/alpheios-project/dod": {
+    "urls": {
+      "short": "https://raw.githubusercontent.com/alpheios-project/dod/master/dat/grc-dod-defs.dat",
+      "index": "https://raw.githubusercontent.com/alpheios-project/dod/master/dat/grc-dod-ids.dat",
+      "full": "http://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=dod&lg=grc&out=html"
+    },
+    "langs": {
+      "source": "grc",
+      "target": "en"
+    },
+    "description": "\"Dodson\"",
+    "rights": "From \"A Public Domain lexicon by John Jeffrey Dodson (2010)\". Created for The Greek New Testament for Beginning Readers: The Byzantine Greek Text & Verb Parsing</span>. Provided by biblicalhumanities.org."
+  },
+  "https://github.com/alpheios-project/dod": {
+    "urls": {
+      "short": "https://raw.githubusercontent.com/alpheios-project/dod/master/dat/grc-dod-defs.dat",
+      "index": "https://raw.githubusercontent.com/alpheios-project/dod/master/dat/grc-dod-ids.dat",
+      "full": "http://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=dod&lg=grc&out=html"
+    },
+    "langs": {
+      "source": "grc",
+      "target": "en"
+    },
+    "description": "\"Dodson\"",
+    "rights": "From \"A Public Domain lexicon by John Jeffrey Dodson (2010)\". Created for The Greek New Testament for Beginning Readers: The Byzantine Greek Text & Verb Parsing</span>. Provided by biblicalhumanities.org."
   },
   "https://github.com/alpheios-project/ls": {
     "urls": {
