@@ -5,6 +5,7 @@ let lsj = 'https://github.com/alpheios-project/lsj'
 
 describe('BaseAdapter object', () => {
   beforeAll(() => {
+    jest.resetModules()
     window.fetch = require('jest-fetch-mock')
   })
 
@@ -92,5 +93,35 @@ describe('BaseAdapter object', () => {
     expect(response2.text).toEqual('n44330')
     let response3 = await adapter.lookupShortDef(mock3)
     expect(response3.text).toEqual('n99999')
+  })
+
+  test('lookup data with alternatives', () => {
+    let mockLemma = {
+      word: 'mare',
+      language: 'lat',
+      principalParts: []
+    }
+    let mockData = new Map([['more', 'n2']])
+    let mockModel = {
+      alternateWordEncodings: jest.fn(() => ['more'])
+    }
+    let adapter = new AlpheiosLexAdapter(lsj)
+    let found = adapter._lookupInDataIndex(mockData, mockLemma, mockModel)
+    expect(found).toEqual('n2')
+  })
+
+  test('lookup data with alternatives and principal parts', () => {
+    let mockLemma = {
+      word: 'mare',
+      language: 'lat',
+      principalParts: ['mere']
+    }
+    let mockData = new Map([['mere', 'n1'], ['more', 'n2']])
+    let mockModel = {
+      alternateWordEncodings: jest.fn(() => ['more'])
+    }
+    let adapter = new AlpheiosLexAdapter(lsj)
+    let found = adapter._lookupInDataIndex(mockData, mockLemma, mockModel)
+    expect(found).toEqual('n1')
   })
 })

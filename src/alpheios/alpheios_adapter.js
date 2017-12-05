@@ -1,6 +1,6 @@
 import BaseLexiconAdapter from '../base_adapter.js'
 import papaparse from 'papaparse'
-import { Definition, ResourceProvider } from 'alpheios-data-models'
+import { Definition, ResourceProvider, LanguageModelFactory } from 'alpheios-data-models'
 import DefaultConfig from './config.json'
 
 class AlpheiosLexAdapter extends BaseLexiconAdapter {
@@ -47,7 +47,8 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
     }
     let id
     if (this.index) {
-      id = this._lookupInDataIndex(this.index, lemma)
+      let model = LanguageModelFactory.getLanguageForCode(lemma.language)
+      id = this._lookupInDataIndex(this.index, lemma, model)
     }
     let url = this.getConfig('urls').full
     if (id) {
@@ -82,7 +83,8 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
       let parsed = papaparse.parse(unparsed, {})
       this.data = new Map(parsed.data)
     }
-    let deftext = this._lookupInDataIndex(this.data, lemma)
+    let model = LanguageModelFactory.getLanguageForCode(lemma.language)
+    let deftext = this._lookupInDataIndex(this.data, lemma, model)
     return new Promise((resolve, reject) => {
       let def = new Definition(deftext, this.getConfig('langs').target, 'text/plain')
       resolve(ResourceProvider.getProxy(this.provider, def))
@@ -93,23 +95,31 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
    * Lookup a Lemma object in an Alpheios v1 data index
    * @param {Map} data the data inddex
    * @param {Lemma} lemma the lemma to lookupInDataIndex
+   * @param {LanguageModel} model a language model for language specific methods
    * @return {string} the index entry as a text string
    */
-  _lookupInDataIndex (data, lemma) {
+  _lookupInDataIndex (data, lemma, model) {
     // legacy behavior from Alpheios lemma data file indices
     // first look to see if we explicitly have an instance of this lemma
     // with capitalization retained
     let found
 
     let alternatives = []
-    for (let l of [...lemma.principalParts, lemma.word]) {
+    let altEncodings = []
+    for (let l of [lemma.word, ...lemma.principalParts]) {
       alternatives.push(l)
+      for (let a of model.alternateWordEncodings(l)) {
+        // we gather altEncodings separately because they should
+        // be tried last after the lemma and principalParts in their
+        // original form
+        altEncodings.push(a)
+      }
       let nosense = l.replace(/_?\d+$/, '')
       if (l !== nosense) {
         alternatives.push(nosense)
       }
     }
-    // TODO may be other language specific normalizations here
+    alternatives = [...alternatives, ...altEncodings]
 
     for (let lookup of alternatives) {
       found = data.get(lookup.toLocaleLowerCase())
