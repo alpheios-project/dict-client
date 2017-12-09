@@ -1,2 +1,3 @@
 import AlpheiosLexAdapter from './alpheios/alpheios_adapter'
-export { AlpheiosLexAdapter }
+import Lexicons from './lexicons'
+export { Lexicons, AlpheiosLexAdapter }
