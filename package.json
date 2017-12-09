@@ -2,10 +2,11 @@
   "name": "alpheios-lexicon-client",
   "version": "0.0.1",
   "description": "Alpheios Lexicon Client Library",
-  "main": "dist/alpheios-lexicon-client.js",
+  "main": "dist/alpheios-lexicon-client.standalone.js",
+  "moduleExternal": "dist/alpheios-lexicon-client.module-external.js",
   "scripts": {
     "test": "standard --fix && jest",
-    "build": "rollup -c rollup.config.js",
+    "build": "standard --fix && node ./rollup.build.js",
     "lint": "standard --fix"
   },
   "repository": {
