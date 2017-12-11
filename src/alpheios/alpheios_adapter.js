@@ -80,7 +80,15 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
     if (this.data === null) {
       let url = this.getConfig('urls').short
       let unparsed = await this._loadData(url)
-      let parsed = papaparse.parse(unparsed, {})
+      // the PapaParse algorigthm doesn't deal well with fields with start with data
+      // in quotes but doesn't use quotes to enclose the entire field contents.
+      // eg. a row like
+      //   lemma|"some def" and more def.
+      // throws it off. Since these data files don't contain quoted
+      // fields just use a non-printable unicode char as the quoteChar
+      // (i.e. one which is unlikely to appear in the data) as the
+      // in the papaparse config to prevent it from doing this
+      let parsed = papaparse.parse(unparsed, {quoteChar: '\u{0000}'})
       this.data = new Map(parsed.data)
     }
     let model = LanguageModelFactory.getLanguageForCode(lemma.language)
