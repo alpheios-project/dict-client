@@ -22,7 +22,6 @@ describe('BaseAdapter object', () => {
   test('get lexicons', () => {
     let latin = AlpheiosLexAdapter.getLexicons('lat')
     expect(latin.size).toEqual(1)
-    console.log(latin)
     expect(latin.get('https://github.com/alpheios-project/ls')).toBeTruthy()
   })
 
@@ -56,13 +55,13 @@ describe('BaseAdapter object', () => {
 
   test('load data', async () => {
     let mockLemma = {
-      word: 'mare',
-      language: 'lat',
+      word: 'foo',
+      language: 'grc',
       principalParts: []
     }
     let adapter = new AlpheiosLexAdapter(lsj)
-    let dummyResponse = {'foo': 'bar'}
-    window.fetch.mockResponse(JSON.stringify(dummyResponse))
+    let dummyResponse = `foo|n9999`
+    window.fetch.mockResponse(dummyResponse)
     await adapter.lookupShortDef(mockLemma)
     expect(adapter.data).toBeTruthy()
   })
@@ -123,5 +122,14 @@ describe('BaseAdapter object', () => {
     let adapter = new AlpheiosLexAdapter(lsj)
     let found = adapter._lookupInDataIndex(mockData, mockLemma, mockModel)
     expect(found).toEqual('n1')
+  })
+
+  test('fill map', () => {
+    let adapter = new AlpheiosLexAdapter(lsj)
+    let rows = [ ['mare', 'n1'], ['mare', 'n2'], ['other', 'n3'] ]
+    let filled = adapter._fillMap(rows)
+    expect(filled.size).toEqual(2)
+    expect(filled.get('mare')).toEqual(['n1', 'n2'])
+    expect(filled.get('other')).toEqual(['n3'])
   })
 })
