@@ -1635,8 +1635,10 @@ const STR_LANG_CODE_LA = 'la';
 const STR_LANG_CODE_GRC = 'grc';
 const STR_LANG_CODE_ARA = 'ara';
 const STR_LANG_CODE_AR = 'ar';
-const STR_LANG_CODE_FAR = 'far';
+const STR_LANG_CODE_FAS = 'fas';
 const STR_LANG_CODE_PER = 'per';
+const STR_LANG_CODE_FA_IR = 'fa-IR';
+const STR_LANG_CODE_FA = 'fa';
 // parts of speech
 const POFS_ADJECTIVE = 'adjective';
 const POFS_ADVERB = 'adverb';
@@ -1839,8 +1841,10 @@ var constants = Object.freeze({
 	STR_LANG_CODE_GRC: STR_LANG_CODE_GRC,
 	STR_LANG_CODE_ARA: STR_LANG_CODE_ARA,
 	STR_LANG_CODE_AR: STR_LANG_CODE_AR,
-	STR_LANG_CODE_FAR: STR_LANG_CODE_FAR,
+	STR_LANG_CODE_FAS: STR_LANG_CODE_FAS,
 	STR_LANG_CODE_PER: STR_LANG_CODE_PER,
+	STR_LANG_CODE_FA_IR: STR_LANG_CODE_FA_IR,
+	STR_LANG_CODE_FA: STR_LANG_CODE_FA,
 	POFS_ADJECTIVE: POFS_ADJECTIVE,
 	POFS_ADVERB: POFS_ADVERB,
 	POFS_ADVERBIAL: POFS_ADVERBIAL,
@@ -2028,6 +2032,10 @@ class Definition {
     this.text = text;
     this.language = language;
     this.format = format;
+  }
+
+  static readObject (jsonObject) {
+    return new Definition(jsonObject.text, jsonObject.language, jsonObject.format)
   }
 }
 
@@ -2508,6 +2516,53 @@ class LanguageModel {
   toCode () {
     return null
   }
+
+  /*
+  There are two types of language identificators: language IDs and language code. Language ID is a symbol constant
+  defined in constants.js, such as LANG_LATIN or LANG_GREEK. Language code is a string containing (usually)
+  a three-letter language codes such as 'lat' or 'la' for latin. There can be multiple language codes that identify
+  the same language, but there is only one unique language ID for each language.
+   */
+
+  /**
+   * Returns an array of language codes that represents the language.
+   * @return {String[]} An array of language codes that matches the language.
+   */
+  static get codes () {
+    return []
+  }
+
+  /**
+   * Checks wither a language has a particular language code in its list of codes
+   * @param {String} languageCode - A language code to check
+   * @param {String[]} codes - Array of language codes a specific language has
+   * @return {boolean} Wither this language code exists in a language code list
+   */
+  static hasCodeInList (languageCode, codes) {
+    if (LanguageModel.isLanguageCode(languageCode)) {
+      return codes.includes(languageCode)
+    } else {
+      throw new Error(`Format of a "${languageCode}" is incorrect`)
+    }
+  }
+
+  /**
+   * Tests wither a provided language identificator is a language ID.
+   * @param {Symbol | string} language - A language identificator, either a Symbol or a string language code.
+   * @return {boolean} True if language identificator provided is a language ID.
+   */
+  static isLanguageID (language) {
+    return (typeof language === 'symbol')
+  }
+
+  /**
+   * Tests wither a provided language identificator is a language code.
+   * @param {Symbol | string} language - A language identificator, either a Symbol or a string language code.
+   * @return {boolean} - True if language identificator provided is a language code.
+   */
+  static isLanguageCode (language) {
+    return !LanguageModel.isLanguageID(language)
+  }
 }
 
 /**
@@ -2518,13 +2573,30 @@ class LatinLanguageModel extends LanguageModel {
    */
   constructor () {
     super();
-    this.sourceLanguage = LANG_LATIN;
+    this.sourceLanguage = LatinLanguageModel.sourceLanguage; // For compatibility, should use a static method instead
     this.contextForward = 0;
     this.contextBackward = 0;
     this.direction = LANG_DIR_LTR;
     this.baseUnit = LANG_UNIT_WORD;
-    this.codes = [STR_LANG_CODE_LA, STR_LANG_CODE_LAT];
+    this.codes = LatinLanguageModel.codes; // To keep compatibility with existing code
     this.features = this._initializeFeatures();
+  }
+
+  static get sourceLanguage () {
+    return LANG_LATIN
+  }
+
+  static get codes () {
+    return [STR_LANG_CODE_LA, STR_LANG_CODE_LAT]
+  }
+
+  /**
+   * Checks wither a language has a particular language code in its list of codes
+   * @param {String} languageCode - A language code to check
+   * @return {boolean} Wither this language code exists in a language code list
+   */
+  static hasCode (languageCode) {
+    return LanguageModel.hasCodeInList(languageCode, LatinLanguageModel.codes)
   }
 
   _initializeFeatures () {
@@ -2588,7 +2660,12 @@ class LatinLanguageModel extends LanguageModel {
     return ".,;:!?'\"(){}\\[\\]<>/\\\u00A0\u2010\u2011\u2012\u2013\u2014\u2015\u2018\u2019\u201C\u201D\u0387\u00B7\n\r"
   }
 
+  // For compatibility with existing code, can be replaced with a static version
   toCode () {
+    return LatinLanguageModel.toCode()
+  }
+
+  static toCode () {
     return STR_LANG_CODE_LAT
   }
 }
@@ -2602,12 +2679,12 @@ class GreekLanguageModel extends LanguageModel {
    */
   constructor () {
     super();
-    this.sourceLanguage = LANG_GREEK;
+    this.sourceLanguage = GreekLanguageModel.sourceLanguage;
     this.contextForward = 0;
     this.contextBackward = 0;
     this.direction = LANG_DIR_LTR;
     this.baseUnit = LANG_UNIT_WORD;
-    this.languageCodes = [STR_LANG_CODE_GRC];
+    this.languageCodes = GreekLanguageModel.codes;
     this.features = this._initializeFeatures();
   }
 
@@ -2650,7 +2727,29 @@ class GreekLanguageModel extends LanguageModel {
     return features
   }
 
+  static get sourceLanguage () {
+    return LANG_GREEK
+  }
+
+  static get codes () {
+    return [STR_LANG_CODE_GRC]
+  }
+
+  /**
+   * Checks wither a language has a particular language code in its list of codes
+   * @param {String} languageCode - A language code to check
+   * @return {boolean} Wither this language code exists in a language code list
+   */
+  static hasCode (languageCode) {
+    return LanguageModel.hasCodeInList(languageCode, GreekLanguageModel.codes)
+  }
+
+  // For compatibility with existing code, can be replaced with a static version
   toCode () {
+    return GreekLanguageModel.toCode()
+  }
+
+  static toCode () {
     return STR_LANG_CODE_GRC
   }
 
@@ -2739,12 +2838,12 @@ class ArabicLanguageModel extends LanguageModel {
    */
   constructor () {
     super();
-    this.sourceLanguage = LANG_ARABIC;
+    this.sourceLanguage = ArabicLanguageModel.sourceLanguage;
     this.contextForward = 0;
     this.contextBackward = 0;
     this.direction = LANG_DIR_RTL;
     this.baseUnit = LANG_UNIT_WORD;
-    this.languageCodes = [STR_LANG_CODE_ARA, STR_LANG_CODE_AR];
+    this.languageCodes = ArabicLanguageModel.codes;
     this._initializeFeatures();
   }
 
@@ -2752,8 +2851,30 @@ class ArabicLanguageModel extends LanguageModel {
     this.features = super._initializeFeatures();
   }
 
+  static get sourceLanguage () {
+    return LANG_ARABIC
+  }
+
+  static get codes () {
+    return [STR_LANG_CODE_ARA, STR_LANG_CODE_AR]
+  }
+
+  // For compatibility with existing code, can be replaced with a static version
   toCode () {
+    return ArabicLanguageModel.toCode()
+  }
+
+  static toCode () {
     return STR_LANG_CODE_ARA
+  }
+
+  /**
+   * Checks wither a language has a particular language code in its list of codes
+   * @param {String} languageCode - A language code to check
+   * @return {boolean} Wither this language code exists in a language code list
+   */
+  static hasCode (languageCode) {
+    return LanguageModel.hasCodeInList(languageCode, ArabicLanguageModel.codes)
   }
 
   /**
@@ -2813,12 +2934,12 @@ class PersianLanguageModel extends LanguageModel {
    */
   constructor () {
     super();
-    this.sourceLanguage = LANG_PERSIAN;
+    this.sourceLanguage = PersianLanguageModel.sourceLanguage;
     this.contextForward = 0;
     this.contextBackward = 0;
     this.direction = LANG_DIR_RTL;
     this.baseUnit = LANG_UNIT_WORD;
-    this.languageCodes = [STR_LANG_CODE_PER, STR_LANG_CODE_FAR];
+    this.languageCodes = PersianLanguageModel.codes;
     this._initializeFeatures();
   }
 
@@ -2826,8 +2947,30 @@ class PersianLanguageModel extends LanguageModel {
     this.features = super._initializeFeatures();
   }
 
+  static get sourceLanguage () {
+    return LANG_PERSIAN
+  }
+
+  static get codes () {
+    return [STR_LANG_CODE_PER, STR_LANG_CODE_FAS, STR_LANG_CODE_FA, STR_LANG_CODE_FA_IR]
+  }
+
+  // For compatibility with existing code, can be replaced with a static version
   toCode () {
+    return PersianLanguageModel.toCode()
+  }
+
+  static toCode () {
     return STR_LANG_CODE_PER
+  }
+
+  /**
+   * Checks wither a language has a particular language code in its list of codes
+   * @param {String} languageCode - A language code to check
+   * @return {boolean} Wither this language code exists in a language code list
+   */
+  static hasCode (languageCode) {
+    return LanguageModel.hasCodeInList(languageCode, PersianLanguageModel.codes)
   }
 
   /**
@@ -2853,8 +2996,7 @@ const MODELS = new Map([
   [ STR_LANG_CODE_GRC, GreekLanguageModel ],
   [ STR_LANG_CODE_ARA, ArabicLanguageModel ],
   [ STR_LANG_CODE_AR, ArabicLanguageModel ],
-  [ STR_LANG_CODE_PER, PersianLanguageModel ],
-  [ STR_LANG_CODE_FAR, PersianLanguageModel ]
+  [ STR_LANG_CODE_PER, PersianLanguageModel ]
 ]);
 
 class LanguageModelFactory {
@@ -2870,6 +3012,32 @@ class LanguageModelFactory {
     // for now return a default Model
     // TODO may want to throw an error
     return new LanguageModel()
+  }
+
+  /**
+   * Converts an ISO 639-3 language code to a language ID
+   * @param {String} languageCode - An ISO 639-3 language code
+   * @return {Symbol | undefined} A language ID or undefined if language ID is not found
+   */
+  static getLanguageIdFromCode (languageCode) {
+    for (const languageModel of MODELS.values()) {
+      if (languageModel.hasCode(languageCode)) {
+        return languageModel.sourceLanguage
+      }
+    }
+  }
+
+  /**
+   * Converts a language ID to an default ISO 639-3 language code for that language
+   * @param {Symbol} languageID - A language ID
+   * @return {String | undefined} An ISO 639-3 language code or undefined if language code is not found
+   */
+  static getLanguageCodeFromId (languageID) {
+    for (const languageModel of MODELS.values()) {
+      if (languageModel.sourceLanguage === languageID) {
+        return languageModel.toCode()
+      }
+    }
   }
 }
 
@@ -2958,16 +3126,16 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
       let url = this.getConfig('urls').index;
       let unparsed = await this._loadData(url);
       let parsed = papaparse.parse(unparsed, {});
-      this.index = new Map(parsed.data);
+      this.index = this._fillMap(parsed.data);
     }
-    let id;
+    let ids;
     if (this.index) {
       let model = LanguageModelFactory.getLanguageForCode(lemma.language);
-      id = this._lookupInDataIndex(this.index, lemma, model);
+      ids = this._lookupInDataIndex(this.index, lemma, model);
     }
     let url = this.getConfig('urls').full;
-    if (id) {
-      url = `${url}&n=${id}`;
+    if (ids) {
+      url = `${url}&n=${ids[0]}`; // TODO we need to handle multiple ids here
     } else {
       url = `${url}&l=${lemma.word}`;
     }
@@ -3003,14 +3171,19 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
       // fields just use a non-printable unicode char as the quoteChar
       // (i.e. one which is unlikely to appear in the data) as the
       // in the papaparse config to prevent it from doing this
-      let parsed = papaparse.parse(unparsed, {quoteChar: '\u{0000}'});
-      this.data = new Map(parsed.data);
+      let parsed = papaparse.parse(unparsed, {quoteChar: '\u{0000}', delimiter: '|'});
+      this.data = this._fillMap(parsed.data);
     }
     let model = LanguageModelFactory.getLanguageForCode(lemma.language);
-    let deftext = this._lookupInDataIndex(this.data, lemma, model);
+    let deftexts = this._lookupInDataIndex(this.data, lemma, model);
     return new Promise((resolve, reject) => {
-      let def = new Definition(deftext, this.getConfig('langs').target, 'text/plain');
-      resolve(ResourceProvider.getProxy(this.provider, def));
+      if (deftexts) {
+        // TODO handle multiple definitions
+        let def = new Definition(deftexts[0], this.getConfig('langs').target, 'text/plain');
+        resolve(ResourceProvider.getProxy(this.provider, def));
+      } else {
+        reject(new Error('Not Found'));
+      }
     })
   }
 
@@ -3046,7 +3219,7 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
 
     for (let lookup of alternatives) {
       found = data.get(lookup.toLocaleLowerCase());
-      if (found === '@') {
+      if (found && found.length === 1 && found[0] === '@') {
         found = data.get(`@${lookup}`);
       }
       if (found) {
@@ -3073,6 +3246,25 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
           reject(error);
         });
     })
+  }
+
+  /**
+   * fills the data map with the rows from the parsed file
+   * we need a method to do this because there may be homonyms in
+   * the files
+   * @param {string[]} rows
+   * @return {Map} the filled map
+   */
+  _fillMap (rows) {
+    let data = new Map();
+    for (let row of rows) {
+      if (data.has(row[0])) {
+        data.get(row[0]).push(row[1]);
+      } else {
+        data.set(row[0], [ row[1] ]);
+      }
+    }
+    return data
   }
 
   /**

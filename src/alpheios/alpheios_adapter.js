@@ -43,16 +43,16 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
       let url = this.getConfig('urls').index
       let unparsed = await this._loadData(url)
       let parsed = papaparse.parse(unparsed, {})
-      this.index = new Map(parsed.data)
+      this.index = this._fillMap(parsed.data)
     }
-    let id
+    let ids
     if (this.index) {
       let model = LanguageModelFactory.getLanguageForCode(lemma.language)
-      id = this._lookupInDataIndex(this.index, lemma, model)
+      ids = this._lookupInDataIndex(this.index, lemma, model)
     }
     let url = this.getConfig('urls').full
-    if (id) {
-      url = `${url}&n=${id}`
+    if (ids) {
+      url = `${url}&n=${ids[0]}` // TODO we need to handle multiple ids here
     } else {
       url = `${url}&l=${lemma.word}`
     }
@@ -88,14 +88,19 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
       // fields just use a non-printable unicode char as the quoteChar
       // (i.e. one which is unlikely to appear in the data) as the
       // in the papaparse config to prevent it from doing this
-      let parsed = papaparse.parse(unparsed, {quoteChar: '\u{0000}'})
-      this.data = new Map(parsed.data)
+      let parsed = papaparse.parse(unparsed, {quoteChar: '\u{0000}', delimiter: '|'})
+      this.data = this._fillMap(parsed.data)
     }
     let model = LanguageModelFactory.getLanguageForCode(lemma.language)
-    let deftext = this._lookupInDataIndex(this.data, lemma, model)
+    let deftexts = this._lookupInDataIndex(this.data, lemma, model)
     return new Promise((resolve, reject) => {
-      let def = new Definition(deftext, this.getConfig('langs').target, 'text/plain')
-      resolve(ResourceProvider.getProxy(this.provider, def))
+      if (deftexts) {
+        // TODO handle multiple definitions
+        let def = new Definition(deftexts[0], this.getConfig('langs').target, 'text/plain')
+        resolve(ResourceProvider.getProxy(this.provider, def))
+      } else {
+        reject(new Error('Not Found'))
+      }
     })
   }
 
@@ -131,7 +136,7 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
 
     for (let lookup of alternatives) {
       found = data.get(lookup.toLocaleLowerCase())
-      if (found === '@') {
+      if (found && found.length === 1 && found[0] === '@') {
         found = data.get(`@${lookup}`)
       }
       if (found) {
@@ -158,6 +163,25 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
           reject(error)
         })
     })
+  }
+
+  /**
+   * fills the data map with the rows from the parsed file
+   * we need a method to do this because there may be homonyms in
+   * the files
+   * @param {string[]} rows
+   * @return {Map} the filled map
+   */
+  _fillMap (rows) {
+    let data = new Map()
+    for (let row of rows) {
+      if (data.has(row[0])) {
+        data.get(row[0]).push(row[1])
+      } else {
+        data.set(row[0], [ row[1] ])
+      }
+    }
+    return data
   }
 
   /**
