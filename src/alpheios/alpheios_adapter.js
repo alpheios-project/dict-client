@@ -51,6 +51,7 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
       ids = this._lookupInDataIndex(this.index, lemma, model)
     }
     let url = this.getConfig('urls').full
+    if (!url) { throw new Error(`URL data is not available`) }
     if (ids) {
       url = `${url}&n=${ids[0]}` // TODO we need to handle multiple ids here
     } else {
@@ -79,6 +80,7 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
   async lookupShortDef (lemma = null) {
     if (this.data === null) {
       let url = this.getConfig('urls').short
+      if (!url) { throw new Error(`URL data is not available`) }
       let unparsed = await this._loadData(url)
       // the PapaParse algorigthm doesn't deal well with fields with start with data
       // in quotes but doesn't use quotes to enclose the entire field contents.
