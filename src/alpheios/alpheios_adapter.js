@@ -111,7 +111,6 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
     let model = LanguageModelFactory.getLanguageForCode(lemma.language)
     let deftexts = this._lookupInDataIndex(this.data, lemma, model)
     let promises = []
-    console.log('Short defs = ', deftexts)
     if (deftexts) {
       for (let d of deftexts) {
         promises.push(new Promise((resolve, reject) => {
