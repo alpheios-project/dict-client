@@ -60,7 +60,7 @@ export default class Lexicons {
           try {
             adapter[lookupFunction](lemma)
               .then(value => {
-                console.log(`A definition object has been returned from "${adapter.config.description}"`)
+                console.log(`A definition object has been returned from "${adapter.config.description}"`, value)
                 if (timeout) { window.clearTimeout(timeout) }
                 // value is a Definition object wrapped in a Proxy
                 resolve(value)

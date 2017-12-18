@@ -36,8 +36,25 @@ describe('BaseAdapter object', () => {
     let dummyResponse = `mare|${mockDefinition}`
     window.fetch.mockResponse(dummyResponse)
     let response = await adapter.lookupShortDef(mockLemma)
-    expect(response.text).toEqual(mockDefinition)
-    expect(response.provider.toString()).toMatch(/Liddell/)
+    expect(response[0].text).toEqual(mockDefinition)
+    expect(response[0].provider.toString()).toMatch(/Liddell/)
+  })
+
+  test('getShortDef multiples', async () => {
+    let mockLemma = {
+      word: 'mare',
+      language: 'lat',
+      principalParts: []
+    }
+    let mockDefinition = 'short definition'
+    let mockDefinition2 = 'another definition'
+    let adapter = new AlpheiosLexAdapter(lsj)
+    let dummyResponse = `mare|${mockDefinition}\nmare|${mockDefinition2}`
+    window.fetch.mockResponse(dummyResponse)
+    let response = await adapter.lookupShortDef(mockLemma)
+    expect(response[0].text).toEqual(mockDefinition)
+    expect(response[0].provider.toString()).toMatch(/Liddell/)
+    expect(response[1].text).toEqual(mockDefinition2)
   })
 
   test('getFullDef', async () => {
@@ -50,7 +67,22 @@ describe('BaseAdapter object', () => {
     let dummyResponse = '<div n="abc">my def</div>'
     window.fetch.mockResponse(dummyResponse)
     let response = await adapter.lookupFullDef(mockLemma)
-    expect(response.text).toEqual(dummyResponse)
+    expect(response[0].text).toEqual(dummyResponse)
+  })
+
+  test('getFullDef multiples', async () => {
+    let mockLemma = {
+      word: 'mare',
+      language: 'lat',
+      principalParts: []
+    }
+    let mockDefinition = 'short definition'
+    let mockDefinition2 = 'another definition'
+    let adapter = new AlpheiosLexAdapter(lsj)
+    let dummyResponse = `mare|${mockDefinition}\nmare|${mockDefinition2}`
+    window.fetch.mockResponse(dummyResponse)
+    let response = await adapter.lookupShortDef(mockLemma)
+    expect(response.length).toEqual(2)
   })
 
   test('load data', async () => {
@@ -87,11 +119,11 @@ describe('BaseAdapter object', () => {
     expect.assertions(3)
     window.fetch.mockResponse(dummyResponse)
     let response = await adapter.lookupShortDef(mock)
-    expect(response.text).toEqual('n44301')
+    expect(response[0].text).toEqual('n44301')
     let response2 = await adapter.lookupShortDef(mock2)
-    expect(response2.text).toEqual('n44330')
+    expect(response2[0].text).toEqual('n44330')
     let response3 = await adapter.lookupShortDef(mock3)
-    expect(response3.text).toEqual('n99999')
+    expect(response3[0].text).toEqual('n99999')
   })
 
   test('lookup data with alternatives', () => {

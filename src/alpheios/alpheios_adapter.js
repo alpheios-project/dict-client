@@ -52,26 +52,41 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
     }
     let url = this.getConfig('urls').full
     if (!url) { throw new Error(`URL data is not available`) }
+    let requests = []
     if (ids) {
-      url = `${url}&n=${ids[0]}` // TODO we need to handle multiple ids here
+      for (let id of ids) {
+        requests.push(`${url}&n=${id}`)
+      }
     } else {
-      url = `${url}&l=${lemma.word}`
+      requests.push(`${url}&l=${lemma.word}`)
     }
     let targetLanguage = this.getConfig('langs').target
-    let p = new Promise((resolve, reject) => {
-      window.fetch(url).then(
-          function (response) {
-            let text = response.text()
-            resolve(text)
-          }
-        ).catch((error) => {
-          reject(error)
-        })
-    })
-    return p.then((result) => {
-      let def = new Definition(result, targetLanguage, 'text/html')
-      return ResourceProvider.getProxy(this.provider, def)
-    })
+    let promises = []
+    for (let r of requests) {
+      let p = new Promise((resolve, reject) => {
+        window.fetch(r).then(
+            function (response) {
+              let text = response.text()
+              resolve(text)
+            }
+          ).catch((error) => {
+            reject(error)
+          })
+      }).then((result) => {
+        let def = new Definition(result, targetLanguage, 'text/html')
+        return ResourceProvider.getProxy(this.provider, def)
+      })
+      promises.push(p)
+    }
+    return Promise.all(promises).then(
+      values => {
+        return values.filter(value => { return value })
+      },
+      error => {
+        console.log(error)
+        // quietly fail?
+      }
+    )
   }
 
   /**
@@ -95,15 +110,29 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
     }
     let model = LanguageModelFactory.getLanguageForCode(lemma.language)
     let deftexts = this._lookupInDataIndex(this.data, lemma, model)
-    return new Promise((resolve, reject) => {
-      if (deftexts) {
-        // TODO handle multiple definitions
-        let def = new Definition(deftexts[0], this.getConfig('langs').target, 'text/plain')
-        resolve(ResourceProvider.getProxy(this.provider, def))
-      } else {
+    let promises = []
+    console.log('Short defs = ', deftexts)
+    if (deftexts) {
+      for (let d of deftexts) {
+        promises.push(new Promise((resolve, reject) => {
+          let def = new Definition(d, this.getConfig('langs').target, 'text/plain')
+          resolve(ResourceProvider.getProxy(this.provider, def))
+        }))
+      }
+    } else {
+      promises.push(new Promise((resolve, reject) => {
         reject(new Error('Not Found'))
       }
-    })
+      ))
+    }
+    return Promise.all(promises).then(
+      values => {
+        return values.filter(value => { return value })
+      },
+      error => {
+        throw (error)
+      }
+    )
   }
 
   /**
