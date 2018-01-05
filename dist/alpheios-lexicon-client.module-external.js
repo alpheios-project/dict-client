@@ -1695,7 +1695,7 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
             reject(error);
           });
       }).then((result) => {
-        let def = new Definition(result, targetLanguage, 'text/html');
+        let def = new Definition(result, targetLanguage, 'text/html', lemma.word);
         return ResourceProvider.getProxy(this.provider, def)
       });
       promises.push(p);
@@ -1736,7 +1736,7 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
     if (deftexts) {
       for (let d of deftexts) {
         promises.push(new Promise((resolve, reject) => {
-          let def = new Definition(d, this.getConfig('langs').target, 'text/plain');
+          let def = new Definition(d, this.getConfig('langs').target, 'text/plain', lemma.word);
           resolve(ResourceProvider.getProxy(this.provider, def));
         }));
       }

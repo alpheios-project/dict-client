@@ -2028,95 +2028,17 @@ var constants = Object.freeze({
 });
 
 class Definition {
-  constructor (text, language, format) {
+  constructor (text, language, format, lemmaText) {
     this.text = text;
     this.language = language;
     this.format = format;
+    this.lemmaText = lemmaText;
   }
 
   static readObject (jsonObject) {
-    return new Definition(jsonObject.text, jsonObject.language, jsonObject.format)
+    return new Definition(jsonObject.text, jsonObject.language, jsonObject.format, jsonObject.lemmaText)
   }
 }
-
-/**
- * Wrapper class for a (grammatical, usually) feature, such as part of speech or declension. Keeps both value and type information.
- */
-class Feature {
-    /**
-     * Initializes a Feature object
-     * @param {string | string[]} value - A single feature value or, if this feature could have multiple
-     * values, an array of values.
-     * @param {string} type - A type of the feature, allowed values are specified in 'types' object.
-     * @param {string} language - A language of a feature, allowed values are specified in 'languages' object.
-     */
-  constructor (value, type, language) {
-    if (!Feature.types.isAllowed(type)) {
-      throw new Error('Features of "' + type + '" type are not supported.')
-    }
-    if (!value) {
-      throw new Error('Feature should have a non-empty value.')
-    }
-    if (!type) {
-      throw new Error('Feature should have a non-empty type.')
-    }
-    if (!language) {
-      throw new Error('Feature constructor requires a language')
-    }
-    this.value = value;
-    this.type = type;
-    this.language = language;
-  };
-
-  isEqual (feature) {
-    if (Array.isArray(feature.value)) {
-      if (!Array.isArray(this.value) || this.value.length !== feature.value.length) {
-        return false
-      }
-      let equal = this.type === feature.type && this.language === feature.language;
-      equal = equal && this.value.every(function (element, index) {
-        return element === feature.value[index]
-      });
-      return equal
-    } else {
-      return this.value === feature.value && this.type === feature.type && this.language === feature.language
-    }
-  }
-}
-// Should have no spaces in values in order to be used in HTML templates
-Feature.types = {
-  word: 'word',
-  part: 'part of speech', // Part of speech
-  number: 'number',
-  grmCase: 'case',
-  declension: 'declension',
-  gender: 'gender',
-  type: 'type',
-  conjugation: 'conjugation',
-  comparison: 'comparison',
-  tense: 'tense',
-  voice: 'voice',
-  mood: 'mood',
-  person: 'person',
-  frequency: 'frequency', // How frequent this word is
-  meaning: 'meaning', // Meaning of a word
-  source: 'source', // Source of word definition
-  footnote: 'footnote', // A footnote for a word's ending
-  dialect: 'dialect', // a dialect iderntifier
-  note: 'note', // a general note
-  pronunciation: 'pronunciation',
-  area: 'area',
-  geo: 'geo', // geographical data
-  kind: 'kind', // verb kind informatin
-  derivtype: 'derivtype',
-  stemtype: 'stemtype',
-  morph: 'morph', // general morphological information
-  var: 'var', // variance?
-  isAllowed (value) {
-    let v = `${value}`;
-    return Object.values(this).includes(v)
-  }
-};
 
 class FeatureImporter {
   constructor (defaults = []) {
@@ -2225,15 +2147,24 @@ class FeatureType {
     }
   };
 
+  /**
+   * test to see if this FeatureType allows unrestricted values
+   * @returns {boolean} true if unrestricted false if not
+   */
+  hasUnrestrictedValue () {
+    return this.orderedValues.length === 1 && this.orderedValues[0] === FeatureType.UNRESTRICTED_VALUE
+  }
+
     /**
      * Return a Feature with an arbitrary value. This value would not be necessarily present among FeatureType values.
      * This can be especially useful for features that do not set: a list of predefined values, such as footnotes.
      * @param value
+     * @param {int} sortOrder
      * @returns {Feature}
      */
-  get (value) {
+  get (value, sortOrder = 1) {
     if (value) {
-      return new Feature(value, this.type, this.language)
+      return new Feature(value, this.type, this.language, sortOrder)
     } else {
       throw new Error('A non-empty value should be provided.')
     }
@@ -2375,6 +2306,73 @@ class FeatureType {
     }
   }
 }
+FeatureType.UNRESTRICTED_VALUE = Symbol('unrestricted');
+
+class InflectionGroupingKey {
+  /**
+   * @constructor
+   * @param {Inflection} infl inflection with features which are used as a grouping key
+   * @param {string[]} features array of feature names which are used as the key
+   * @param {Map} extras extra property name and value pairs used in the key
+   */
+  constructor (infl, features, extras = {}) {
+    for (let feature of features) {
+      this[feature] = infl[feature];
+    }
+    Object.assign(this, extras);
+  }
+
+  /**
+   * checks if a feature with a specific value
+   * is included in the grouping key
+   * @returns {boolean} true if found, false if not
+   */
+  hasFeatureValue (feature, value) {
+    for (let f of this[feature]) {
+      if (f.hasValue(value)) {
+        return true
+      }
+    }
+    return false
+  }
+
+  /**
+   * Return this key as a string
+   * @returns {string} string representation of the key
+   */
+  toString () {
+    let values = [];
+    for (let prop of Object.getOwnPropertyNames(this).sort()) {
+      if (Array.isArray(this[prop])) {
+        values.push(this[prop].map((x) => x.toString()).sort().join(','));
+      } else {
+        values.push(this[prop]);
+      }
+    }
+    return values.join(' ')
+  }
+}
+
+class InflectionGroup {
+  /**
+   * A group of inflections or groups of inflections
+   *
+   * @param {InflectionGroupingKey} groupingKey features of the inflections in the group
+   * @param {Inflection[]|InflectionGroup[]} inflections array of Inflections or InflectionGroups in this group
+   */
+  constructor (groupingKey, inflections = [], sortKey = null) {
+    this.groupingKey = groupingKey;
+    this.inflections = inflections;
+  }
+
+  /**
+   * Add an Inflection or InflectionGroup to the group
+   * @param {Inflection|InflectionGroup} inflection
+   */
+  append (inflection) {
+    this.inflections.push(inflection);
+  }
+}
 
 /**
  * @class  LanguageModel is the base class for language-specific behavior
@@ -2418,6 +2416,25 @@ class LanguageModel {
       [TYPE_REGULAR, TYPE_IRREGULAR], code);
     features[Feature.types.person] = new FeatureType(Feature.types.person,
       [ORD_1ST, ORD_2ND, ORD_3RD], code);
+    // some general, non-language specific grammatical features
+    features[Feature.types.age] = new FeatureType(Feature.types.age,
+      [FeatureType.UNRESTRICTED_VALUE], code);
+    features[Feature.types.area] = new FeatureType(Feature.types.area,
+      [FeatureType.UNRESTRICTED_VALUE], code);
+    features[Feature.types.source] = new FeatureType(Feature.types.source,
+      [FeatureType.UNRESTRICTED_VALUE], code);
+    features[Feature.types.frequency] = new FeatureType(Feature.types.frequency,
+      [FeatureType.UNRESTRICTED_VALUE], code);
+    features[Feature.types.geo] = new FeatureType(Feature.types.geo,
+      [FeatureType.UNRESTRICTED_VALUE], code);
+    features[Feature.types.source] = new FeatureType(Feature.types.source,
+      [FeatureType.UNRESTRICTED_VALUE], code);
+    features[Feature.types.pronunciation] = new FeatureType(Feature.types.pronunciation,
+      [FeatureType.UNRESTRICTED_VALUE], code);
+    features[Feature.types.kind] = new FeatureType(Feature.types.kind,
+      [FeatureType.UNRESTRICTED_VALUE], code);
+    features[Feature.types.comparison] = new FeatureType(Feature.types.comparison,
+      [COMP_POSITIVE, COMP_SUPERLATIVE, COMP_COMPARITIVE], code);
     return features
   }
 
@@ -2562,6 +2579,131 @@ class LanguageModel {
    */
   static isLanguageCode (language) {
     return !LanguageModel.isLanguageID(language)
+  }
+
+  /**
+   * Groups a set of inflections according to a language-specific display paradigm
+   * The default groups according to the following logic:
+   *   1. groups of groups with unique stem, prefix, suffix, part of speech dialect and comparison
+   *     2. groups of those groups with unique
+   *          number, if it's an inflection with a grammatical case
+   *          tense, if it's an inflection with tense but no case (i.e. a verb)
+   *          verbs without tense or case
+   *          adverbs
+   *          everything else
+   *       3. groups of those groups with unique voice and tense
+   *         4. groups of inflections with unique gender, person, mood, and sort
+   */
+  groupInflectionsForDisplay (inflections) {
+    let grouped = new Map();
+
+    // group inflections by part of speech
+    for (let infl of inflections) {
+      let groupingKey = new InflectionGroupingKey(infl,
+        [Feature.types.part, Feature.types.dialect, Feature.types.comparison],
+        { prefix: infl.prefix,
+          suffix: infl.suffix,
+          stem: infl.stem
+        }
+        );
+      let groupingKeyStr = groupingKey.toString();
+      if (grouped.has(groupingKeyStr)) {
+        grouped.get(groupingKeyStr).append(infl);
+      } else {
+        grouped.set(groupingKeyStr, new InflectionGroup(groupingKey, [infl]));
+      }
+    }
+
+    // iterate through each group key to group the inflections in that group
+    for (let kv of grouped) {
+      let inflgrp = new Map();
+      for (let infl of kv[1].inflections) {
+        let keyprop;
+        let isCaseInflectionSet = false;
+        if (infl[Feature.types.grmCase]) {
+          // grouping on number if case is defined
+          keyprop = Feature.types.number;
+          isCaseInflectionSet = true;
+        } else if (infl[Feature.types.tense]) {
+          // grouping on tense if tense is defined but not case
+          keyprop = Feature.types.tense;
+        } else if (infl[Feature.types.part] === POFS_VERB) {
+          // grouping on no case or tense but a verb
+          keyprop = Feature.types.part;
+        } else if (infl[Feature.types.part] === POFS_ADVERB) {
+          keyprop = Feature.types.part;
+          // grouping on adverbs without case or tense
+        } else {
+          keyprop = 'misc';
+          // grouping on adverbs without case or tense
+          // everything else
+        }
+        let groupingKey = new InflectionGroupingKey(infl, [keyprop], {isCaseInflectionSet: isCaseInflectionSet});
+        let groupingKeyStr = groupingKey.toString();
+        if (inflgrp.has(groupingKeyStr)) {
+          inflgrp.get(groupingKeyStr).append(infl);
+        } else {
+          inflgrp.set(groupingKeyStr, new InflectionGroup(groupingKey, [infl]));
+        }
+      }
+      // inflgrp is now a map of groups of inflections grouped by
+      //  inflections with number
+      //  inflections without number but with tense
+      //  inflections of verbs without tense
+      //  inflections of adverbs
+      //  everything else
+      // iterate through each inflection group key to group the inflections in that group by tense and voice
+      for (let kv of inflgrp) {
+        let nextGroup = new Map();
+        let sortOrder = new Map();
+        for (let infl of kv[1].inflections) {
+          let sortkey = infl[Feature.types.grmCase] ? Math.max(infl[Feature.types.grmCase].map((f) => { return f.sortOrder })) : 1;
+          let groupingKey = new InflectionGroupingKey(infl, [Feature.types.tense, Feature.types.voice]);
+          let groupingKeyStr = groupingKey.toString();
+          if (nextGroup.has(groupingKeyStr)) {
+            nextGroup.get(groupingKeyStr).append(infl);
+          } else {
+            nextGroup.set(groupingKeyStr, new InflectionGroup(groupingKey, [infl], sortkey));
+            sortOrder.set(groupingKeyStr, sortkey);
+          }
+        }
+        kv[1].inflections = [];
+        let sortedKeys = Array.from(nextGroup.keys()).sort(
+          (a, b) => {
+            let orderA = sortOrder.get(a);
+            let orderB = sortOrder.get(b);
+            return orderA > orderB ? -1 : orderB > orderA ? 1 : 0
+          }
+        );
+        for (let groupkey of sortedKeys) {
+          kv[1].inflections.push(nextGroup.get(groupkey));
+        }
+      }
+
+      // inflgrp is now a Map of groups of groups of inflections
+
+      for (let kv of inflgrp) {
+        let groups = kv[1];
+        for (let group of groups.inflections) {
+          let nextGroup = new Map();
+          for (let infl of group.inflections) {
+            // set key is case comp gend pers mood sort
+            let groupingKey = new InflectionGroupingKey(infl,
+              [Feature.types.grmCase, Feature.types.comparison, Feature.types.gender, Feature.types.number, Feature.types.person,
+                Feature.types.tense, Feature.types.mood, Feature.types.sort, Feature.types.voice]);
+            let groupingKeyStr = groupingKey.toString();
+            if (nextGroup.has(groupingKeyStr)) {
+              nextGroup.get(groupingKeyStr).append(infl);
+            } else {
+              nextGroup.set(groupingKeyStr, new InflectionGroup(groupingKey, [infl]));
+            }
+          }
+          group.inflections = Array.from(nextGroup.values()); // now a group of inflection groups
+        }
+      }
+      kv[1].inflections = Array.from(inflgrp.values());
+    }
+    return Array.from(grouped.values())
   }
 }
 
@@ -3047,6 +3189,147 @@ class LanguageModelFactory {
 }
 
 /**
+ * This is a temporary placeholder for an i18n library
+ */
+const i18n = {
+  en: {
+    feminine: {
+      full: 'feminine',
+      abbr: 'f'
+    },
+    masculine: {
+      full: 'masculine',
+      abbr: 'm'
+    },
+    neuter: {
+      full: 'neuter',
+      abbr: 'n'
+    }
+  }
+};
+
+/**
+ * Wrapper class for a (grammatical, usually) feature, such as part of speech or declension. Keeps both value and type information.
+ */
+class Feature {
+    /**
+     * Initializes a Feature object
+     * @param {string | string[]} value - A single feature value or, if this feature could have multiple
+     * values, an array of values.
+     * @param {string} type - A type of the feature, allowed values are specified in 'types' object.
+     * @param {string} language - A language of a feature, allowed values are specified in 'languages' object.
+     * @param {int} sortOrder - an integer used for sorting
+     */
+  constructor (value, type, language, sortOrder = 1) {
+    if (!Feature.types.isAllowed(type)) {
+      throw new Error('Features of "' + type + '" type are not supported.')
+    }
+    if (!value) {
+      throw new Error('Feature should have a non-empty value.')
+    }
+    if (!type) {
+      throw new Error('Feature should have a non-empty type.')
+    }
+    if (!language) {
+      throw new Error('Feature constructor requires a language')
+    }
+    this.value = value;
+    this.type = type;
+    this.language = language;
+    this.languageCode = language;
+    this.languageID = LanguageModelFactory.getLanguageIdFromCode(this.languageCode);
+    this.sortOrder = sortOrder;
+  };
+
+  isEqual (feature) {
+    if (Array.isArray(feature.value)) {
+      if (!Array.isArray(this.value) || this.value.length !== feature.value.length) {
+        return false
+      }
+      let equal = this.type === feature.type && this.language === feature.language;
+      equal = equal && this.value.every(function (element, index) {
+        return element === feature.value[index]
+      });
+      return equal
+    } else {
+      return this.value === feature.value && this.type === feature.type && this.language === feature.language
+    }
+  }
+
+  /**
+   * examine the feature for a specific value
+   * @param {string} value
+   * @returns {boolean} true if the value is included in the feature's values
+   */
+  hasValue (value) {
+    if (Array.isArray(this.value)) {
+      return this.value.includes(value)
+    } else {
+      return this.value === value
+    }
+  }
+
+  /**
+   * string representation of a feature
+   * @return {string}
+   */
+  toString () {
+    if (Array.isArray(this.value)) {
+      return this.value.join(',')
+    } else {
+      return this.value
+    }
+  }
+
+  /**
+   * a locale-specific abbreviation for a feature's values
+   * @return {string}
+   */
+  toLocaleStringAbbr (lang = 'en') {
+    if (Array.isArray(this.value)) {
+      return this.value.map((v) => this.toLocaleStringAbbr(v, lang))
+    } else {
+      return i18n[lang][this.value].abbr
+    }
+  }
+}
+// Should have no spaces in values in order to be used in HTML templates
+Feature.types = {
+  word: 'word',
+  part: 'part of speech', // Part of speech
+  number: 'number',
+  grmCase: 'case',
+  declension: 'declension',
+  gender: 'gender',
+  type: 'type',
+  conjugation: 'conjugation',
+  comparison: 'comparison',
+  tense: 'tense',
+  voice: 'voice',
+  mood: 'mood',
+  person: 'person',
+  frequency: 'frequency', // How frequent this word is
+  meaning: 'meaning', // Meaning of a word
+  source: 'source', // Source of word definition
+  footnote: 'footnote', // A footnote for a word's ending
+  dialect: 'dialect', // a dialect iderntifier
+  note: 'note', // a general note
+  pronunciation: 'pronunciation',
+  age: 'age',
+  area: 'area',
+  geo: 'geo', // geographical data
+  kind: 'kind', // verb kind informatin
+  derivtype: 'derivtype',
+  stemtype: 'stemtype',
+  morph: 'morph', // general morphological information
+  var: 'var', // variance?
+  isAllowed (value) {
+    let v = `${value}`;
+    return Object.values(this).includes(v)
+  }
+};
+
+/**
  * An abstraction of an Alpheios resource provider
  */
 class ResourceProvider {
@@ -3161,7 +3444,7 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
             reject(error);
           });
       }).then((result) => {
-        let def = new Definition(result, targetLanguage, 'text/html');
+        let def = new Definition(result, targetLanguage, 'text/html', lemma.word);
         return ResourceProvider.getProxy(this.provider, def)
       });
       promises.push(p);
@@ -3202,7 +3485,7 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
     if (deftexts) {
       for (let d of deftexts) {
         promises.push(new Promise((resolve, reject) => {
-          let def = new Definition(d, this.getConfig('langs').target, 'text/plain');
+          let def = new Definition(d, this.getConfig('langs').target, 'text/plain', lemma.word);
           resolve(ResourceProvider.getProxy(this.provider, def));
         }));
       }

@@ -37,6 +37,7 @@ describe('BaseAdapter object', () => {
     window.fetch.mockResponse(dummyResponse)
     let response = await adapter.lookupShortDef(mockLemma)
     expect(response[0].text).toEqual(mockDefinition)
+    expect(response[0].lemmaText).toEqual('mare')
     expect(response[0].provider.toString()).toMatch(/Liddell/)
   })
 
@@ -68,6 +69,7 @@ describe('BaseAdapter object', () => {
     window.fetch.mockResponse(dummyResponse)
     let response = await adapter.lookupFullDef(mockLemma)
     expect(response[0].text).toEqual(dummyResponse)
+    expect(response[0].lemmaText).toEqual('mare')
   })
 
   test('getFullDef multiples', async () => {
