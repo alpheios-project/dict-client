@@ -3,7 +3,7 @@
     "urls": {
       "short": "https://raw.githubusercontent.com/alpheios-project/lsj/master/dat/grc-lsj-defs.dat",
       "index": "https://raw.githubusercontent.com/alpheios-project/lsj/master/dat/grc-lsj-ids.dat",
-      "full": "http://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=lsj&lg=grc&out=html"
+      "full": "https://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=lsj&lg=grc&out=html"
     },
     "langs": {
       "source": "grc",
@@ -16,7 +16,7 @@
     "urls": {
       "short": "https://raw.githubusercontent.com/alpheios-project/aut/master/dat/grc-aut-defs.dat",
       "index": "https://raw.githubusercontent.com/alpheios-project/aut/master/dat/grc-aut-ids.dat",
-      "full": "http://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=aut&lg=grc&out=html"
+      "full": "https://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=aut&lg=grc&out=html"
     },
     "langs": {
       "source": "grc",
@@ -29,7 +29,7 @@
     "urls": {
       "short": "https://raw.githubusercontent.com/alpheios-project/ml/master/dat/grc-ml-defs.dat",
       "index": "https://raw.githubusercontent.com/alpheios-project/ml/master/dat/grc-ml-ids.dat",
-      "full": "http://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=ml&lg=grc&out=html"
+      "full": "https://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=ml&lg=grc&out=html"
     },
     "langs": {
       "source": "grc",
@@ -42,7 +42,7 @@
     "urls": {
       "short": "https://raw.githubusercontent.com/alpheios-project/dod/master/dat/grc-dod-defs.dat",
       "index": "https://raw.githubusercontent.com/alpheios-project/dod/master/dat/grc-dod-ids.dat",
-      "full": "http://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=dod&lg=grc&out=html"
+      "full": "https://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=dod&lg=grc&out=html"
     },
     "langs": {
       "source": "grc",
@@ -55,7 +55,7 @@
     "urls": {
       "short": "https://raw.githubusercontent.com/alpheios-project/dod/master/dat/grc-dod-defs.dat",
       "index": "https://raw.githubusercontent.com/alpheios-project/dod/master/dat/grc-dod-ids.dat",
-      "full": "http://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=dod&lg=grc&out=html"
+      "full": "https://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=dod&lg=grc&out=html"
     },
     "langs": {
       "source": "grc",
@@ -68,7 +68,7 @@
     "urls": {
       "short": null,
       "index": "https://raw.githubusercontent.com/alpheios-project/ls/master/dat/lat-ls-ids.dat",
-      "full": "http://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=ls&lg=lat&out=html"
+      "full": "https://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=ls&lg=lat&out=html"
     },
     "langs": {
       "source": "lat",
@@ -81,7 +81,7 @@
     "urls": {
       "short": null,
       "index": "https://raw.githubusercontent.com/alpheios-project/lan/master/dat/ara-lan-ids.dat",
-      "full": "http://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=lan&lg=ara&out=html"
+      "full": "https://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=lan&lg=ara&out=html"
     },
     "langs": {
       "source": "ara",
@@ -94,7 +94,7 @@
     "urls": {
       "short": null,
       "index": "https://raw.githubusercontent.com/alpheios-project/sal/master/dat/ara-sal-ids.dat",
-      "full": "http://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=sal&lg=ara&out=html"
+      "full": "https://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=sal&lg=ara&out=html"
     },
     "langs": {
       "source": "ara",
@@ -107,7 +107,7 @@
     "urls": {
       "short": "https://raw.githubusercontent.com/alpheios-project/stg/master/dat/per-stg-defs.dat",
       "index": "https://raw.githubusercontent.com/alpheios-project/stg/master/dat/per-stg-ids.dat",
-      "full": "http://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=stg&lg=per&out=html"
+      "full": "https://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=stg&lg=per&out=html"
     },
     "langs": {
       "source": "per",
