@@ -1,8 +1,8 @@
 {
   "https://github.com/alpheios-project/lsj": {
     "urls": {
-      "short": "https://raw.githubusercontent.com/alpheios-project/lsj/master/dat/grc-lsj-defs.dat",
-      "index": "https://raw.githubusercontent.com/alpheios-project/lsj/master/dat/grc-lsj-ids.dat",
+      "short": "https://repos1.alpheios.net/lexdata/lsj/dat/grc-lsj-defs.dat",
+      "index": "https://repos1.alpheios.net/lexdata/lsj/dat/grc-lsj-ids.dat",
       "full": "https://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=lsj&lg=grc&out=html"
     },
     "langs": {
@@ -14,8 +14,8 @@
   },
   "https://github.com/alpheios-project/aut": {
     "urls": {
-      "short": "https://raw.githubusercontent.com/alpheios-project/aut/master/dat/grc-aut-defs.dat",
-      "index": "https://raw.githubusercontent.com/alpheios-project/aut/master/dat/grc-aut-ids.dat",
+      "short": "https://repos1.alpheios.net/lexdata/aut/dat/grc-aut-defs.dat",
+      "index": "https://repos1.alpheios.net/lexdata/aut//dat/grc-aut-ids.dat",
       "full": "https://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=aut&lg=grc&out=html"
     },
     "langs": {
@@ -27,8 +27,8 @@
   },
   "https://github.com/alpheios-project/ml": {
     "urls": {
-      "short": "https://raw.githubusercontent.com/alpheios-project/ml/master/dat/grc-ml-defs.dat",
-      "index": "https://raw.githubusercontent.com/alpheios-project/ml/master/dat/grc-ml-ids.dat",
+      "short": "https://repos1.alpheios.net/lexdata/ml/dat/grc-ml-defs.dat",
+      "index": "https://repos1.alpheios.net/lexdata/ml/dat/grc-ml-ids.dat",
       "full": "https://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=ml&lg=grc&out=html"
     },
     "langs": {
@@ -40,8 +40,8 @@
   },
   "https://github.com/alpheios-project/dod": {
     "urls": {
-      "short": "https://raw.githubusercontent.com/alpheios-project/dod/master/dat/grc-dod-defs.dat",
-      "index": "https://raw.githubusercontent.com/alpheios-project/dod/master/dat/grc-dod-ids.dat",
+      "short": "https://repos1.alpheios.net/lexdata/dod/dat/grc-dod-defs.dat",
+      "index": "https://repos1.alpheios.net/lexdata/dod/dat/grc-dod-ids.dat",
       "full": "https://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=dod&lg=grc&out=html"
     },
     "langs": {
@@ -53,8 +53,8 @@
   },
   "https://github.com/alpheios-project/dod": {
     "urls": {
-      "short": "https://raw.githubusercontent.com/alpheios-project/dod/master/dat/grc-dod-defs.dat",
-      "index": "https://raw.githubusercontent.com/alpheios-project/dod/master/dat/grc-dod-ids.dat",
+      "short": "https://repos1.alpheios.net/lexdata/dod/dat/grc-dod-defs.dat",
+      "index": "https://repos1.alpheios.net/lexdata/dod/dat/grc-dod-ids.dat",
       "full": "https://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=dod&lg=grc&out=html"
     },
     "langs": {
@@ -67,7 +67,7 @@
   "https://github.com/alpheios-project/ls": {
     "urls": {
       "short": null,
-      "index": "https://raw.githubusercontent.com/alpheios-project/ls/master/dat/lat-ls-ids.dat",
+      "index": "https://repos1.alpheios.net/lexdata/ls/dat/lat-ls-ids.dat",
       "full": "https://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=ls&lg=lat&out=html"
     },
     "langs": {
@@ -80,7 +80,7 @@
   "https://github.com/alpheios-project/lan": {
     "urls": {
       "short": null,
-      "index": "https://raw.githubusercontent.com/alpheios-project/lan/master/dat/ara-lan-ids.dat",
+      "index": "https://repos1.alpheios.net/lexdata/lan/dat/ara-lan-ids.dat",
       "full": "https://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=lan&lg=ara&out=html"
     },
     "langs": {
@@ -93,7 +93,7 @@
   "https://github.com/alpheios-project/sal": {
     "urls": {
       "short": null,
-      "index": "https://raw.githubusercontent.com/alpheios-project/sal/master/dat/ara-sal-ids.dat",
+      "index": "https://repos1.alpheios.net/lexdata/sal/dat/ara-sal-ids.dat",
       "full": "https://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=sal&lg=ara&out=html"
     },
     "langs": {
@@ -105,8 +105,8 @@
   },
   "https://github.com/alpheios-project/stg": {
     "urls": {
-      "short": "https://raw.githubusercontent.com/alpheios-project/stg/master/dat/per-stg-defs.dat",
-      "index": "https://raw.githubusercontent.com/alpheios-project/stg/master/dat/per-stg-ids.dat",
+      "short": "https://repos1.alpheios.net/lexdata/stg/dat/per-stg-defs.dat",
+      "index": "https://repos1.alpheios.net/lexdata/stg/dat/per-stg-ids.dat",
       "full": "https://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=stg&lg=per&out=html"
     },
     "langs": {
