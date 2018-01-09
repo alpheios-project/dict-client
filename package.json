@@ -5,7 +5,7 @@
   "main": "dist/alpheios-lexicon-client.standalone.js",
   "moduleExternal": "dist/alpheios-lexicon-client.module-external.js",
   "scripts": {
-    "test": "standard --fix && jest",
+    "test": "standard --fix && jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "build": "standard --fix && node ./rollup.build.js",
     "lint": "standard --fix"
   },
@@ -24,6 +24,7 @@
     "babel-jest": "^21.2.0",
     "babel-preset-es2015": "^6.24.1",
     "babyparse": "^0.4.6",
+    "coveralls": "^3.0.0",
     "jest": "^21.2.1",
     "jest-environment-jsdom-11.0.0": "^20.1.9",
     "jest-fetch-mock": "1.3.3",
