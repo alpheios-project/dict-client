@@ -38,18 +38,18 @@
     "description": "\"Middle Liddell\"",
     "rights": "From \"An Intermediate Greek-English Lexicon\" (Henry George Liddell, Robert Scott)"
   },
-  "https://github.com/alpheios-project/dod": {
+  "https://github.com/alpheios-project/as": {
     "urls": {
-      "short": "https://repos1.alpheios.net/lexdata/dod/dat/grc-dod-defs.dat",
-      "index": "https://repos1.alpheios.net/lexdata/dod/dat/grc-dod-ids.dat",
-      "full": "https://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=dod&lg=grc&out=html"
+      "short": "https://repos1.alpheios.net/lexdata/dod/dat/grc-as-defs.dat",
+      "index": "https://repos1.alpheios.net/lexdata/dod/dat/grc-as-ids.dat",
+      "full": "https://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=as&lg=grc&out=html"
     },
     "langs": {
       "source": "grc",
       "target": "en"
     },
-    "description": "\"Dodson\"",
-    "rights": "From \"A Public Domain lexicon by John Jeffrey Dodson (2010)\". Created for The Greek New Testament for Beginning Readers: The Byzantine Greek Text & Verb Parsing</span>. Provided by biblicalhumanities.org."
+    "description": "\"A Manual Greek Lexicon of the New Testament\"",
+    "rights": "From \"A Manual Greek Lexicon of the New Testament\" (G. Abbott-Smith). Provided by biblicalhumanities.org."
   },
   "https://github.com/alpheios-project/dod": {
     "urls": {
