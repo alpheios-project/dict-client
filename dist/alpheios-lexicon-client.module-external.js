@@ -1908,11 +1908,9 @@ class Lexicons {
    */
   static fetchDefinitions (lemma, requestOptions, lookupFunction) {
     let options = Object.assign(Lexicons.defaults, requestOptions);
-
     let requests = [];
     try {
-      let adapters = Lexicons.getLexiconAdapters(lemma.languageID);
-      if (!adapters || adapters.length === 0) { return [] } // No adapters found for this language
+      let adapters = Lexicons._filterAdapters(lemma, requestOptions);
       requests = adapters.map(adapter => {
         console.log(`Preparing a request to "${adapter.config.description}"`);
         return new Promise((resolve, reject) => {
@@ -1945,6 +1943,22 @@ class Lexicons {
       console.log(`Unable to fetch full definitions due to: ${error}`);
       return []
     }
+  }
+
+  /**
+   * Filter the adapters for a request according to the options
+   * @param {Lemma} lemma - the requested lemma
+   * @param {Object} objects - the request options
+   * @return the list of applicable Adapters
+   */
+  static _filterAdapters (lemma, options) {
+    console.log('Request Options', options);
+    let adapters = Lexicons.getLexiconAdapters(lemma.languageID);
+    if (adapters && options.allow) {
+      adapters = adapters.filter((a) => options.allow.includes(a.lexid));
+    }
+    if (!adapters || adapters.length === 0) { return [] } // No adapters found for this language
+    return adapters
   }
 
   /**
