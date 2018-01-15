@@ -40,8 +40,8 @@
   },
   "https://github.com/alpheios-project/as": {
     "urls": {
-      "short": "https://repos1.alpheios.net/lexdata/dod/dat/grc-as-defs.dat",
-      "index": "https://repos1.alpheios.net/lexdata/dod/dat/grc-as-ids.dat",
+      "short": "https://repos1.alpheios.net/lexdata/as/dat/grc-as-defs.dat",
+      "index": "https://repos1.alpheios.net/lexdata/as/dat/grc-as-ids.dat",
       "full": "https://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=as&lg=grc&out=html"
     },
     "langs": {
