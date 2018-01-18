@@ -72,7 +72,7 @@ describe('BaseAdapter object', () => {
     expect(response[0].lemmaText).toEqual('mare')
   })
 
-  test('getFullDef multiples', async () => {
+  test('getShortDef multiples', async () => {
     let mockLemma = {
       word: 'mare',
       language: 'lat',

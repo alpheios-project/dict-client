@@ -1695,8 +1695,12 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
             reject(error);
           });
       }).then((result) => {
-        let def = new Definition(result, targetLanguage, 'text/html', lemma.word);
-        return ResourceProvider.getProxy(this.provider, def)
+        if (result.match(/No entries found/)) {
+          throw new Error('Not Found')
+        } else {
+          let def = new Definition(result, targetLanguage, 'text/html', lemma.word);
+          return ResourceProvider.getProxy(this.provider, def)
+        }
       });
       promises.push(p);
     }
@@ -1706,6 +1710,7 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
       },
       error => {
         console.log(error);
+        throw (error)
         // quietly fail?
       }
     )
