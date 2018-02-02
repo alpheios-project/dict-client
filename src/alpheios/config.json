@@ -107,7 +107,7 @@
     "urls": {
       "short": "https://repos1.alpheios.net/lexdata/stg/dat/per-stg-defs.dat",
       "index": "https://repos1.alpheios.net/lexdata/stg/dat/per-stg-ids.dat",
-      "full": "https://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=stg&lg=per&out=html"
+      "full": null
     },
     "langs": {
       "source": "per",
