@@ -10,7 +10,7 @@
       "target": "en"
     },
     "description": "\"A Greek-English Lexicon\" (Henry George Liddell, Robert Scott)",
-    "rights": "From \"A Greek-English Lexicon\" (Henry George Liddell, Robert Scott)"
+    "rights": "\"A Greek-English Lexicon\" (Henry George Liddell, Robert Scott). Provided by the Perseus Digital Library at Tufts University."
   },
   "https://github.com/alpheios-project/aut": {
     "urls": {
@@ -23,7 +23,7 @@
       "target": "en"
     },
     "description": "\"Autenrieth Homeric Dictionary\" (Geoerge Autenrieth)",
-    "rights": "From \"Autenrieth Homeric Dictionary\" (Geoerge Autenrieth)"
+    "rights": "\"Autenrieth Homeric Dictionary\" (Geoerge Autenrieth). Provided by the Perseus Digital Library at Tufts University"
   },
   "https://github.com/alpheios-project/ml": {
     "urls": {
@@ -36,7 +36,7 @@
       "target": "en"
     },
     "description": "\"Middle Liddell\"",
-    "rights": "From \"An Intermediate Greek-English Lexicon\" (Henry George Liddell, Robert Scott)"
+    "rights": "\"An Intermediate Greek-English Lexicon\" (Henry George Liddell, Robert Scott). Provided by the Perseus Digital Library at Tufts University"
   },
   "https://github.com/alpheios-project/as": {
     "urls": {
@@ -49,7 +49,7 @@
       "target": "en"
     },
     "description": "\"A Manual Greek Lexicon of the New Testament\"",
-    "rights": "From \"A Manual Greek Lexicon of the New Testament\" (G. Abbott-Smith). Provided by biblicalhumanities.org."
+    "rights": "\"A Manual Greek Lexicon of the New Testament\" (G. Abbott-Smith). Provided by biblicalhumanities.org."
   },
   "https://github.com/alpheios-project/dod": {
     "urls": {
@@ -62,7 +62,7 @@
       "target": "en"
     },
     "description": "\"Dodson\"",
-    "rights": "From \"A Public Domain lexicon by John Jeffrey Dodson (2010)\". Provided by biblicalhumanities.org."
+    "rights": "\"A Public Domain lexicon by John Jeffrey Dodson (2010)\". Provided by biblicalhumanities.org."
   },
   "https://github.com/alpheios-project/ls": {
     "urls": {
@@ -75,7 +75,7 @@
       "target": "en"
     },
     "description": "\"A Latin Dictionary\" (Charlton T. Lewis, Charles Short)",
-    "rights": "From \"A Latin Dictionary\" (Charlton T. Lewis, Charles Short)"
+    "rights": "\"A Latin Dictionary\" (Charlton T. Lewis, Charles Short). Provided by the Perseus Digital Library at Tufts University."
   },
   "https://github.com/alpheios-project/lan": {
     "urls": {
@@ -88,7 +88,7 @@
       "target": "en"
     },
     "description": "\"The Arabic-English Lexicon\" (Edward Lane)",
-    "rights": "From \"The Arabic-English Lexicon\" (Edward Lane)"
+    "rights": "\"The Arabic-English Lexicon\" (Edward Lane). Provided by the Perseus Digital Library at Tufts University."
   },
   "https://github.com/alpheios-project/sal": {
     "urls": {
@@ -101,7 +101,7 @@
       "target": "en"
     },
     "description": "\"An Advanced Learner's Arabic Dictionary\" (H. Anthony Salmone)",
-    "rights": "From \"An Advanced Learner's Arabic Dictionary\" (H. Anthony Salmone)"
+    "rights": "\"An Advanced Learner's Arabic Dictionary\" (H. Anthony Salmone). Provided by the Perseus Digital Library at Tufts University."
   },
   "https://github.com/alpheios-project/stg": {
     "urls": {
@@ -114,6 +114,6 @@
       "target": "en"
     },
     "description": "\"A Comprehensive Persian-English Dictionary\" (Francis Joseph Steingass)",
-    "rights": "From \"A Comprehensive Persian-English Dictionary\" (Francis Joseph Steingass). Provided by the Center for Advanced Study of Language (CASL) at the University of Maryland, College Park."
+    "rights": "\"A Comprehensive Persian-English Dictionary\" (Francis Joseph Steingass). Provided by the Center for Advanced Study of Language (CASL) at the University of Maryland, College Park."
   }
 }
