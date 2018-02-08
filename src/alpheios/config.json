@@ -55,7 +55,7 @@
     "urls": {
       "short": "https://repos1.alpheios.net/lexdata/dod/dat/grc-dod-defs.dat",
       "index": "https://repos1.alpheios.net/lexdata/dod/dat/grc-dod-ids.dat",
-      "full": "https://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=dod&lg=grc&out=html"
+      "full": null
     },
     "langs": {
       "source": "grc",
