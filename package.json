@@ -1,6 +1,6 @@
 {
   "name": "alpheios-lexicon-client",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Alpheios Lexicon Client Library",
   "main": "dist/alpheios-lexicon-client.standalone.js",
   "moduleExternal": "dist/alpheios-lexicon-client.module-external.js",
