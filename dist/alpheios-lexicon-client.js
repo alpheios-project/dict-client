@@ -1,44 +1,94 @@
-import { Definition, LanguageModelFactory, ResourceProvider } from 'alpheios-data-models';
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory(require("alpheios-data-models"));
+	else if(typeof define === 'function' && define.amd)
+		define(["alpheios-data-models"], factory);
+	else {
+		var a = typeof exports === 'object' ? factory(require("alpheios-data-models")) : factory(root["alpheios-data-models"]);
+		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
+	}
+})(window, function(__WEBPACK_EXTERNAL_MODULE_alpheios_data_models__) {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = "./driver.js");
+/******/ })
+/************************************************************************/
+/******/ ({
 
-/**
- * Base Adapter Class for a Lexicon Service
- */
-class BaseLexiconAdapter {
-  /**
-   * Lookup a short definition in a lexicon
-   * @param {Lemma} lemma Lemma to lookup
-   * @return {Promise} a Promise that resolves to an array Definition objects
-   */
-  async lookupShortDef (lemma) {
-    throw new Error('Unimplemented')
-  }
+/***/ "../node_modules/papaparse/papaparse.js":
+/*!**********************************************!*\
+  !*** ../node_modules/papaparse/papaparse.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
-  /**
-   * Lookup a full definition in a lexicon
-   * @param {Lemma} lemma Lemma to lookup
-   * @return {Promise} a Promise that resolves to an array of Definition objects
-   */
-  async lookupFullDef (lemma) {
-    throw new Error('Unimplemented')
-  }
-
-  /**
-   * Get the available lexicons provided by this adapter class for the
-   * requested language
-   * @param {string} language languageCode
-   * @return {Array} a Map of lexicon objects. Keys are lexicon uris, values are the lexicon description.
-   */
-  static getLexicons (language) {
-    return []
-  }
-}
-
-function createCommonjsModule(fn, module) {
-	return module = { exports: {} }, fn(module, module.exports), module.exports;
-}
-
-var papaparse = createCommonjsModule(function (module, exports) {
-/*!
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 	Papa Parse
 	v4.3.6
 	https://github.com/mholt/PapaParse
@@ -46,17 +96,15 @@ var papaparse = createCommonjsModule(function (module, exports) {
 */
 (function(root, factory)
 {
-	if (typeof undefined === 'function' && undefined.amd)
+	if (true)
 	{
 		// AMD. Register as an anonymous module.
-		undefined([], factory);
+		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	}
-	else {
-		// Node. Does not work with strict CommonJS, but
-		// only CommonJS-like environments that support module.exports,
-		// like Node.
-		module.exports = factory();
-	}
+	else {}
 }(this, function()
 {
 	'use strict';
@@ -196,7 +244,7 @@ var papaparse = createCommonjsModule(function (module, exports) {
 				queue.splice(0, 1);
 				parseNextFile();
 			}
-		};
+		}
 	}
 
 
@@ -651,7 +699,7 @@ var papaparse = createCommonjsModule(function (module, exports) {
 				this._chunkError();
 			else
 				this._start += this._config.chunkSize;
-		};
+		}
 
 		this._chunkLoaded = function()
 		{
@@ -666,13 +714,13 @@ var papaparse = createCommonjsModule(function (module, exports) {
 
 			this._finished = !this._config.chunkSize || this._start > getFileSize(xhr);
 			this.parseChunk(xhr.responseText);
-		};
+		}
 
 		this._chunkError = function(errorMessage)
 		{
 			var errorText = xhr.statusText || errorMessage;
 			this._sendError(errorText);
-		};
+		}
 
 		function getFileSize(xhr)
 		{
@@ -721,7 +769,7 @@ var papaparse = createCommonjsModule(function (module, exports) {
 		{
 			if (!this._finished && (!this._config.preview || this._rowCount < this._config.preview))
 				this._readChunk();
-		};
+		}
 
 		this._readChunk = function()
 		{
@@ -734,7 +782,7 @@ var papaparse = createCommonjsModule(function (module, exports) {
 			var txt = reader.readAsText(input, this._config.encoding);
 			if (!usingAsyncReader)
 				this._chunkLoaded({ target: { result: txt } });	// mimic the async signature
-		};
+		}
 
 		this._chunkLoaded = function(event)
 		{
@@ -742,12 +790,12 @@ var papaparse = createCommonjsModule(function (module, exports) {
 			this._start += this._config.chunkSize;
 			this._finished = !this._config.chunkSize || this._start >= this._input.size;
 			this.parseChunk(event.target.result);
-		};
+		}
 
 		this._chunkError = function()
 		{
 			this._sendError(reader.error);
-		};
+		}
 
 	}
 	FileStreamer.prototype = Object.create(ChunkStreamer.prototype);
@@ -766,7 +814,7 @@ var papaparse = createCommonjsModule(function (module, exports) {
 			string = s;
 			remaining = s;
 			return this._nextChunk();
-		};
+		}
 		this._nextChunk = function()
 		{
 			if (this._finished) return;
@@ -775,7 +823,7 @@ var papaparse = createCommonjsModule(function (module, exports) {
 			remaining = size ? remaining.substr(size) : '';
 			this._finished = !remaining;
 			return this.parseChunk(chunk);
-		};
+		}
 	}
 	StringStreamer.prototype = Object.create(StringStreamer.prototype);
 	StringStreamer.prototype.constructor = StringStreamer;
@@ -797,7 +845,7 @@ var papaparse = createCommonjsModule(function (module, exports) {
 			this._input.on('data', this._streamData);
 			this._input.on('end', this._streamEnd);
 			this._input.on('error', this._streamError);
-		};
+		}
 
 		this._nextChunk = function()
 		{
@@ -809,7 +857,7 @@ var papaparse = createCommonjsModule(function (module, exports) {
 			{
 				parseOnData = true;
 			}
-		};
+		}
 
 		this._streamData = bindFunction(function(chunk)
 		{
@@ -1094,7 +1142,7 @@ var papaparse = createCommonjsModule(function (module, exports) {
 				for (var j = 0; j < preview.data.length; j++)
 				{
 					if (skipEmptyLines && preview.data[j].length === 1 && preview.data[j][0].length === 0) {
-						emptyLinesCount++;
+						emptyLinesCount++
 						continue
 					}
 					var fieldCount = preview.data[j].length;
@@ -1621,11 +1669,32 @@ var papaparse = createCommonjsModule(function (module, exports) {
 
 	return Papa;
 }));
-});
 
-var DefaultConfig = "{\n  \"https://github.com/alpheios-project/lsj\": {\n    \"urls\": {\n      \"short\": \"https://repos1.alpheios.net/lexdata/lsj/dat/grc-lsj-defs.dat\",\n      \"index\": \"https://repos1.alpheios.net/lexdata/lsj/dat/grc-lsj-ids.dat\",\n      \"full\": \"https://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=lsj&lg=grc&out=html\"\n    },\n    \"langs\": {\n      \"source\": \"grc\",\n      \"target\": \"en\"\n    },\n    \"description\": \"\\\"A Greek-English Lexicon\\\" (Henry George Liddell, Robert Scott)\",\n    \"rights\": \"\\\"A Greek-English Lexicon\\\" (Henry George Liddell, Robert Scott). Provided by the Perseus Digital Library at Tufts University.\"\n  },\n  \"https://github.com/alpheios-project/aut\": {\n    \"urls\": {\n      \"short\": \"https://repos1.alpheios.net/lexdata/aut/dat/grc-aut-defs.dat\",\n      \"index\": \"https://repos1.alpheios.net/lexdata/aut//dat/grc-aut-ids.dat\",\n      \"full\": \"https://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=aut&lg=grc&out=html\"\n    },\n    \"langs\": {\n      \"source\": \"grc\",\n      \"target\": \"en\"\n    },\n    \"description\": \"\\\"Autenrieth Homeric Dictionary\\\" (Geoerge Autenrieth)\",\n    \"rights\": \"\\\"Autenrieth Homeric Dictionary\\\" (Geoerge Autenrieth). Provided by the Perseus Digital Library at Tufts University\"\n  },\n  \"https://github.com/alpheios-project/ml\": {\n    \"urls\": {\n      \"short\": \"https://repos1.alpheios.net/lexdata/ml/dat/grc-ml-defs.dat\",\n      \"index\": \"https://repos1.alpheios.net/lexdata/ml/dat/grc-ml-ids.dat\",\n      \"full\": \"https://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=ml&lg=grc&out=html\"\n    },\n    \"langs\": {\n      \"source\": \"grc\",\n      \"target\": \"en\"\n    },\n    \"description\": \"\\\"Middle Liddell\\\"\",\n    \"rights\": \"\\\"An Intermediate Greek-English Lexicon\\\" (Henry George Liddell, Robert Scott). Provided by the Perseus Digital Library at Tufts University\"\n  },\n  \"https://github.com/alpheios-project/as\": {\n    \"urls\": {\n      \"short\": \"https://repos1.alpheios.net/lexdata/as/dat/grc-as-defs.dat\",\n      \"index\": \"https://repos1.alpheios.net/lexdata/as/dat/grc-as-ids.dat\",\n      \"full\": \"https://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=as&lg=grc&out=html\"\n    },\n    \"langs\": {\n      \"source\": \"grc\",\n      \"target\": \"en\"\n    },\n    \"description\": \"\\\"A Manual Greek Lexicon of the New Testament\\\"\",\n    \"rights\": \"\\\"A Manual Greek Lexicon of the New Testament\\\" (G. Abbott-Smith). Provided by biblicalhumanities.org.\"\n  },\n  \"https://github.com/alpheios-project/dod\": {\n    \"urls\": {\n      \"short\": \"https://repos1.alpheios.net/lexdata/dod/dat/grc-dod-defs.dat\",\n      \"index\": \"https://repos1.alpheios.net/lexdata/dod/dat/grc-dod-ids.dat\",\n      \"full\": null\n    },\n    \"langs\": {\n      \"source\": \"grc\",\n      \"target\": \"en\"\n    },\n    \"description\": \"\\\"Dodson\\\"\",\n    \"rights\": \"\\\"A Public Domain lexicon by John Jeffrey Dodson (2010)\\\". Provided by biblicalhumanities.org.\"\n  },\n  \"https://github.com/alpheios-project/ls\": {\n    \"urls\": {\n      \"short\": null,\n      \"index\": \"https://repos1.alpheios.net/lexdata/ls/dat/lat-ls-ids.dat\",\n      \"full\": \"https://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=ls&lg=lat&out=html\"\n    },\n    \"langs\": {\n      \"source\": \"lat\",\n      \"target\": \"en\"\n    },\n    \"description\": \"\\\"A Latin Dictionary\\\" (Charlton T. Lewis, Charles Short)\",\n    \"rights\": \"\\\"A Latin Dictionary\\\" (Charlton T. Lewis, Charles Short). Provided by the Perseus Digital Library at Tufts University.\"\n  },\n  \"https://github.com/alpheios-project/lan\": {\n    \"urls\": {\n      \"short\": null,\n      \"index\": \"https://repos1.alpheios.net/lexdata/lan/dat/ara-lan-ids.dat\",\n      \"full\": \"https://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=lan&lg=ara&out=html\"\n    },\n    \"langs\": {\n      \"source\": \"ara\",\n      \"target\": \"en\"\n    },\n    \"description\": \"\\\"The Arabic-English Lexicon\\\" (Edward Lane)\",\n    \"rights\": \"\\\"The Arabic-English Lexicon\\\" (Edward Lane). Provided by the Perseus Digital Library at Tufts University.\"\n  },\n  \"https://github.com/alpheios-project/sal\": {\n    \"urls\": {\n      \"short\": null,\n      \"index\": \"https://repos1.alpheios.net/lexdata/sal/dat/ara-sal-ids.dat\",\n      \"full\": \"https://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=sal&lg=ara&out=html\"\n    },\n    \"langs\": {\n      \"source\": \"ara\",\n      \"target\": \"en\"\n    },\n    \"description\": \"\\\"An Advanced Learner's Arabic Dictionary\\\" (H. Anthony Salmone)\",\n    \"rights\": \"\\\"An Advanced Learner's Arabic Dictionary\\\" (H. Anthony Salmone). Provided by the Perseus Digital Library at Tufts University.\"\n  },\n  \"https://github.com/alpheios-project/stg\": {\n    \"urls\": {\n      \"short\": \"https://repos1.alpheios.net/lexdata/stg/dat/per-stg-defs.dat\",\n      \"index\": \"https://repos1.alpheios.net/lexdata/stg/dat/per-stg-ids.dat\",\n      \"full\": null\n    },\n    \"langs\": {\n      \"source\": \"per\",\n      \"target\": \"en\"\n    },\n    \"description\": \"\\\"A Comprehensive Persian-English Dictionary\\\" (Francis Joseph Steingass)\",\n    \"rights\": \"\\\"A Comprehensive Persian-English Dictionary\\\" (Francis Joseph Steingass). Provided by the Center for Advanced Study of Language (CASL) at the University of Maryland, College Park.\"\n  }\n}\n";
 
-class AlpheiosLexAdapter extends BaseLexiconAdapter {
+/***/ }),
+
+/***/ "./alpheios/alpheios_adapter.js":
+/*!**************************************!*\
+  !*** ./alpheios/alpheios_adapter.js ***!
+  \**************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _base_adapter_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../base_adapter.js */ "./base_adapter.js");
+/* harmony import */ var papaparse__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! papaparse */ "../node_modules/papaparse/papaparse.js");
+/* harmony import */ var papaparse__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(papaparse__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var alpheios_data_models__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! alpheios-data-models */ "alpheios-data-models");
+/* harmony import */ var alpheios_data_models__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(alpheios_data_models__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _config_json__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./config.json */ "./alpheios/config.json");
+var _config_json__WEBPACK_IMPORTED_MODULE_3___namespace = /*#__PURE__*/Object.assign({}, _config_json__WEBPACK_IMPORTED_MODULE_3__, {"default": _config_json__WEBPACK_IMPORTED_MODULE_3__});
+
+
+
+
+
+class AlpheiosLexAdapter extends _base_adapter_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
   /**
    * A Client Adapter for the Alpheios V1 Lexicon service
    * @constructor
@@ -1634,10 +1703,10 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
    * @param {Object} config - JSON configuration object override
    */
   constructor (lexid = null, config = null) {
-    super();
-    this.lexid = lexid;
-    this.data = null;
-    this.index = null;
+    super()
+    this.lexid = lexid
+    this.data = null
+    this.index = null
     // this is a bit of a hack to enable inclusion of a JSON config file
     // in a way that works both pre and post-rollup. Our rollup config
     // will stringify the file and then we can parse it but if we want to
@@ -1645,15 +1714,15 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
     // which works with the raw ES6 import
     if (config == null) {
       try {
-        let fullconfig = JSON.parse(DefaultConfig);
-        this.config = fullconfig[lexid];
+        let fullconfig = JSON.parse(_config_json__WEBPACK_IMPORTED_MODULE_3__)
+        this.config = fullconfig[lexid]
       } catch (e) {
-        this.config = DefaultConfig[lexid];
+        this.config = _config_json__WEBPACK_IMPORTED_MODULE_3__[lexid]
       }
     } else {
-      this.config = config;
+      this.config = config
     }
-    this.provider = new ResourceProvider(this.lexid, this.config.rights);
+    this.provider = new alpheios_data_models__WEBPACK_IMPORTED_MODULE_2__["ResourceProvider"](this.lexid, this.config.rights)
   }
 
   /**
@@ -1662,54 +1731,54 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
   async lookupFullDef (lemma = null) {
     // TODO figure out the best way to handle initial reading of the data file
     if (this.index === null && this.getConfig('urls').index) {
-      let url = this.getConfig('urls').index;
-      let unparsed = await this._loadData(url);
-      let parsed = papaparse.parse(unparsed, {});
-      this.index = this._fillMap(parsed.data);
+      let url = this.getConfig('urls').index
+      let unparsed = await this._loadData(url)
+      let parsed = papaparse__WEBPACK_IMPORTED_MODULE_1___default.a.parse(unparsed, {})
+      this.index = this._fillMap(parsed.data)
     }
-    let ids;
+    let ids
     if (this.index) {
-      let model = LanguageModelFactory.getLanguageForCode(lemma.language);
-      ids = this._lookupInDataIndex(this.index, lemma, model);
+      let model = alpheios_data_models__WEBPACK_IMPORTED_MODULE_2__["LanguageModelFactory"].getLanguageForCode(lemma.language)
+      ids = this._lookupInDataIndex(this.index, lemma, model)
     }
-    let url = this.getConfig('urls').full;
+    let url = this.getConfig('urls').full
     if (!url) { throw new Error(`URL data is not available`) }
-    let requests = [];
+    let requests = []
     if (ids) {
       for (let id of ids) {
-        requests.push(`${url}&n=${id}`);
+        requests.push(`${url}&n=${id}`)
       }
     } else {
-      requests.push(`${url}&l=${lemma.word}`);
+      requests.push(`${url}&l=${lemma.word}`)
     }
-    let targetLanguage = this.getConfig('langs').target;
-    let promises = [];
+    let targetLanguage = this.getConfig('langs').target
+    let promises = []
     for (let r of requests) {
       let p = new Promise((resolve, reject) => {
         window.fetch(r).then(
             function (response) {
-              let text = response.text();
-              resolve(text);
+              let text = response.text()
+              resolve(text)
             }
           ).catch((error) => {
-            reject(error);
-          });
+            reject(error)
+          })
       }).then((result) => {
         if (result.match(/No entries found/)) {
           throw new Error('Not Found')
         } else {
-          let def = new Definition(result, targetLanguage, 'text/html', lemma.word);
-          return ResourceProvider.getProxy(this.provider, def)
+          let def = new alpheios_data_models__WEBPACK_IMPORTED_MODULE_2__["Definition"](result, targetLanguage, 'text/html', lemma.word)
+          return alpheios_data_models__WEBPACK_IMPORTED_MODULE_2__["ResourceProvider"].getProxy(this.provider, def)
         }
-      });
-      promises.push(p);
+      })
+      promises.push(p)
     }
     return Promise.all(promises).then(
       values => {
         return values.filter(value => { return value })
       },
       error => {
-        console.log(error);
+        console.log(error)
         throw (error)
         // quietly fail?
       }
@@ -1721,9 +1790,9 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
    */
   async lookupShortDef (lemma = null) {
     if (this.data === null) {
-      let url = this.getConfig('urls').short;
+      let url = this.getConfig('urls').short
       if (!url) { throw new Error(`URL data is not available`) }
-      let unparsed = await this._loadData(url);
+      let unparsed = await this._loadData(url)
       // the PapaParse algorigthm doesn't deal well with fields with start with data
       // in quotes but doesn't use quotes to enclose the entire field contents.
       // eg. a row like
@@ -1732,24 +1801,24 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
       // fields just use a non-printable unicode char as the quoteChar
       // (i.e. one which is unlikely to appear in the data) as the
       // in the papaparse config to prevent it from doing this
-      let parsed = papaparse.parse(unparsed, {quoteChar: '\u{0000}', delimiter: '|'});
-      this.data = this._fillMap(parsed.data);
+      let parsed = papaparse__WEBPACK_IMPORTED_MODULE_1___default.a.parse(unparsed, {quoteChar: '\u{0000}', delimiter: '|'})
+      this.data = this._fillMap(parsed.data)
     }
-    let model = LanguageModelFactory.getLanguageForCode(lemma.language);
-    let deftexts = this._lookupInDataIndex(this.data, lemma, model);
-    let promises = [];
+    let model = alpheios_data_models__WEBPACK_IMPORTED_MODULE_2__["LanguageModelFactory"].getLanguageForCode(lemma.language)
+    let deftexts = this._lookupInDataIndex(this.data, lemma, model)
+    let promises = []
     if (deftexts) {
       for (let d of deftexts) {
         promises.push(new Promise((resolve, reject) => {
-          let def = new Definition(d, this.getConfig('langs').target, 'text/plain', lemma.word);
-          resolve(ResourceProvider.getProxy(this.provider, def));
-        }));
+          let def = new alpheios_data_models__WEBPACK_IMPORTED_MODULE_2__["Definition"](d, this.getConfig('langs').target, 'text/plain', lemma.word)
+          resolve(alpheios_data_models__WEBPACK_IMPORTED_MODULE_2__["ResourceProvider"].getProxy(this.provider, def))
+        }))
       }
     } else {
       promises.push(new Promise((resolve, reject) => {
-        reject(new Error('Not Found'));
+        reject(new Error('Not Found'))
       }
-      ));
+      ))
     }
     return Promise.all(promises).then(
       values => {
@@ -1772,29 +1841,29 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
     // legacy behavior from Alpheios lemma data file indices
     // first look to see if we explicitly have an instance of this lemma
     // with capitalization retained
-    let found;
+    let found
 
-    let alternatives = [];
-    let altEncodings = [];
+    let alternatives = []
+    let altEncodings = []
     for (let l of [lemma.word, ...lemma.principalParts]) {
-      alternatives.push(l);
+      alternatives.push(l)
       for (let a of model.alternateWordEncodings(l)) {
         // we gather altEncodings separately because they should
         // be tried last after the lemma and principalParts in their
         // original form
-        altEncodings.push(a);
+        altEncodings.push(a)
       }
-      let nosense = l.replace(/_?\d+$/, '');
+      let nosense = l.replace(/_?\d+$/, '')
       if (l !== nosense) {
-        alternatives.push(nosense);
+        alternatives.push(nosense)
       }
     }
-    alternatives = [...alternatives, ...altEncodings];
+    alternatives = [...alternatives, ...altEncodings]
 
     for (let lookup of alternatives) {
-      found = data.get(lookup.toLocaleLowerCase());
+      found = data.get(lookup.toLocaleLowerCase())
       if (found && found.length === 1 && found[0] === '@') {
-        found = data.get(`@${lookup}`);
+        found = data.get(`@${lookup}`)
       }
       if (found) {
         break
@@ -1813,12 +1882,12 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
     return new Promise((resolve, reject) => {
       window.fetch(url).then(
           function (response) {
-            let text = response.text();
-            resolve(text);
+            let text = response.text()
+            resolve(text)
           }
         ).catch((error) => {
-          reject(error);
-        });
+          reject(error)
+        })
     })
   }
 
@@ -1830,12 +1899,12 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
    * @return {Map} the filled map
    */
   _fillMap (rows) {
-    let data = new Map();
+    let data = new Map()
     for (let row of rows) {
       if (data.has(row[0])) {
-        data.get(row[0]).push(row[1]);
+        data.get(row[0]).push(row[1])
       } else {
-        data.set(row[0], [ row[1] ]);
+        data.set(row[0], [ row[1] ])
       }
     }
     return data
@@ -1854,23 +1923,123 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
    * @override BaseAdapter#getLexicons
    */
   static getLexicons (language) {
-    let fullconfig;
-    let lexicons = new Map();
+    let fullconfig
+    let lexicons = new Map()
     try {
-      fullconfig = JSON.parse(DefaultConfig);
+      fullconfig = JSON.parse(_config_json__WEBPACK_IMPORTED_MODULE_3__)
     } catch (e) {
-      fullconfig = DefaultConfig;
+      fullconfig = _config_json__WEBPACK_IMPORTED_MODULE_3__
     }
     for (let l of Object.keys(fullconfig)) {
       if (fullconfig[l].langs.source === language) {
-        lexicons.set(l, fullconfig[l].description);
+        lexicons.set(l, fullconfig[l].description)
       }
     }
     return lexicons
   }
 }
+/* harmony default export */ __webpack_exports__["default"] = (AlpheiosLexAdapter);
 
-let lexicons = new Map(); // Maps a language ID into an array of lexicons
+
+/***/ }),
+
+/***/ "./alpheios/config.json":
+/*!******************************!*\
+  !*** ./alpheios/config.json ***!
+  \******************************/
+/*! exports provided: https://github.com/alpheios-project/lsj, https://github.com/alpheios-project/aut, https://github.com/alpheios-project/ml, https://github.com/alpheios-project/as, https://github.com/alpheios-project/dod, https://github.com/alpheios-project/ls, https://github.com/alpheios-project/lan, https://github.com/alpheios-project/sal, https://github.com/alpheios-project/stg, default */
+/***/ (function(module) {
+
+module.exports = {"https://github.com/alpheios-project/lsj":{"urls":{"short":"https://repos1.alpheios.net/lexdata/lsj/dat/grc-lsj-defs.dat","index":"https://repos1.alpheios.net/lexdata/lsj/dat/grc-lsj-ids.dat","full":"https://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=lsj&lg=grc&out=html"},"langs":{"source":"grc","target":"en"},"description":"\"A Greek-English Lexicon\" (Henry George Liddell, Robert Scott)","rights":"\"A Greek-English Lexicon\" (Henry George Liddell, Robert Scott). Provided by the Perseus Digital Library at Tufts University."},"https://github.com/alpheios-project/aut":{"urls":{"short":"https://repos1.alpheios.net/lexdata/aut/dat/grc-aut-defs.dat","index":"https://repos1.alpheios.net/lexdata/aut//dat/grc-aut-ids.dat","full":"https://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=aut&lg=grc&out=html"},"langs":{"source":"grc","target":"en"},"description":"\"Autenrieth Homeric Dictionary\" (Geoerge Autenrieth)","rights":"\"Autenrieth Homeric Dictionary\" (Geoerge Autenrieth). Provided by the Perseus Digital Library at Tufts University"},"https://github.com/alpheios-project/ml":{"urls":{"short":"https://repos1.alpheios.net/lexdata/ml/dat/grc-ml-defs.dat","index":"https://repos1.alpheios.net/lexdata/ml/dat/grc-ml-ids.dat","full":"https://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=ml&lg=grc&out=html"},"langs":{"source":"grc","target":"en"},"description":"\"Middle Liddell\"","rights":"\"An Intermediate Greek-English Lexicon\" (Henry George Liddell, Robert Scott). Provided by the Perseus Digital Library at Tufts University"},"https://github.com/alpheios-project/as":{"urls":{"short":"https://repos1.alpheios.net/lexdata/as/dat/grc-as-defs.dat","index":"https://repos1.alpheios.net/lexdata/as/dat/grc-as-ids.dat","full":"https://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=as&lg=grc&out=html"},"langs":{"source":"grc","target":"en"},"description":"\"A Manual Greek Lexicon of the New Testament\"","rights":"\"A Manual Greek Lexicon of the New Testament\" (G. Abbott-Smith). Provided by biblicalhumanities.org."},"https://github.com/alpheios-project/dod":{"urls":{"short":"https://repos1.alpheios.net/lexdata/dod/dat/grc-dod-defs.dat","index":"https://repos1.alpheios.net/lexdata/dod/dat/grc-dod-ids.dat","full":null},"langs":{"source":"grc","target":"en"},"description":"\"Dodson\"","rights":"\"A Public Domain lexicon by John Jeffrey Dodson (2010)\". Provided by biblicalhumanities.org."},"https://github.com/alpheios-project/ls":{"urls":{"short":null,"index":"https://repos1.alpheios.net/lexdata/ls/dat/lat-ls-ids.dat","full":"https://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=ls&lg=lat&out=html"},"langs":{"source":"lat","target":"en"},"description":"\"A Latin Dictionary\" (Charlton T. Lewis, Charles Short)","rights":"\"A Latin Dictionary\" (Charlton T. Lewis, Charles Short). Provided by the Perseus Digital Library at Tufts University."},"https://github.com/alpheios-project/lan":{"urls":{"short":null,"index":"https://repos1.alpheios.net/lexdata/lan/dat/ara-lan-ids.dat","full":"https://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=lan&lg=ara&out=html"},"langs":{"source":"ara","target":"en"},"description":"\"The Arabic-English Lexicon\" (Edward Lane)","rights":"\"The Arabic-English Lexicon\" (Edward Lane). Provided by the Perseus Digital Library at Tufts University."},"https://github.com/alpheios-project/sal":{"urls":{"short":null,"index":"https://repos1.alpheios.net/lexdata/sal/dat/ara-sal-ids.dat","full":"https://repos1.alpheios.net/exist/rest/db/xq/lexi-get.xq?lx=sal&lg=ara&out=html"},"langs":{"source":"ara","target":"en"},"description":"\"An Advanced Learner's Arabic Dictionary\" (H. Anthony Salmone)","rights":"\"An Advanced Learner's Arabic Dictionary\" (H. Anthony Salmone). Provided by the Perseus Digital Library at Tufts University."},"https://github.com/alpheios-project/stg":{"urls":{"short":"https://repos1.alpheios.net/lexdata/stg/dat/per-stg-defs.dat","index":"https://repos1.alpheios.net/lexdata/stg/dat/per-stg-ids.dat","full":null},"langs":{"source":"per","target":"en"},"description":"\"A Comprehensive Persian-English Dictionary\" (Francis Joseph Steingass)","rights":"\"A Comprehensive Persian-English Dictionary\" (Francis Joseph Steingass). Provided by the Center for Advanced Study of Language (CASL) at the University of Maryland, College Park."}};
+
+/***/ }),
+
+/***/ "./base_adapter.js":
+/*!*************************!*\
+  !*** ./base_adapter.js ***!
+  \*************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/**
+ * Base Adapter Class for a Lexicon Service
+ */
+class BaseLexiconAdapter {
+  /**
+   * Lookup a short definition in a lexicon
+   * @param {Lemma} lemma Lemma to lookup
+   * @return {Promise} a Promise that resolves to an array Definition objects
+   */
+  async lookupShortDef (lemma) {
+    throw new Error('Unimplemented')
+  }
+
+  /**
+   * Lookup a full definition in a lexicon
+   * @param {Lemma} lemma Lemma to lookup
+   * @return {Promise} a Promise that resolves to an array of Definition objects
+   */
+  async lookupFullDef (lemma) {
+    throw new Error('Unimplemented')
+  }
+
+  /**
+   * Get the available lexicons provided by this adapter class for the
+   * requested language
+   * @param {string} language languageCode
+   * @return {Array} a Map of lexicon objects. Keys are lexicon uris, values are the lexicon description.
+   */
+  static getLexicons (language) {
+    return []
+  }
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (BaseLexiconAdapter);
+
+
+/***/ }),
+
+/***/ "./driver.js":
+/*!*******************!*\
+  !*** ./driver.js ***!
+  \*******************/
+/*! exports provided: Lexicons, AlpheiosLexAdapter */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _alpheios_alpheios_adapter__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./alpheios/alpheios_adapter */ "./alpheios/alpheios_adapter.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AlpheiosLexAdapter", function() { return _alpheios_alpheios_adapter__WEBPACK_IMPORTED_MODULE_0__["default"]; });
+
+/* harmony import */ var _lexicons__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./lexicons */ "./lexicons.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Lexicons", function() { return _lexicons__WEBPACK_IMPORTED_MODULE_1__["default"]; });
+
+
+
+
+
+
+/***/ }),
+
+/***/ "./lexicons.js":
+/*!*********************!*\
+  !*** ./lexicons.js ***!
+  \*********************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Lexicons; });
+/* harmony import */ var alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! alpheios-data-models */ "alpheios-data-models");
+/* harmony import */ var alpheios_data_models__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _alpheios_alpheios_adapter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./alpheios/alpheios_adapter */ "./alpheios/alpheios_adapter.js");
+
+
+
+let lexicons = new Map() // Maps a language ID into an array of lexicons
 
 class Lexicons {
   /**
@@ -1912,40 +2081,40 @@ class Lexicons {
    * a Definition object or resolved with an error if request cannot be made/failed/timeout expired.
    */
   static fetchDefinitions (lemma, requestOptions, lookupFunction) {
-    let options = Object.assign(Lexicons.defaults, requestOptions);
-    let requests = [];
+    let options = Object.assign(Lexicons.defaults, requestOptions)
+    let requests = []
     try {
-      let adapters = Lexicons._filterAdapters(lemma, requestOptions);
+      let adapters = Lexicons._filterAdapters(lemma, requestOptions)
       requests = adapters.map(adapter => {
-        console.log(`Preparing a request to "${adapter.config.description}"`);
+        console.log(`Preparing a request to "${adapter.config.description}"`)
         return new Promise((resolve, reject) => {
-          let timeout = 0;
+          let timeout = 0
           if (options.timeout > 0) {
             timeout = window.setTimeout(() => {
-              reject(new Error(`Timeout of ${options.timeout} ms has been expired for a request to "${adapter.config.description}"`));
-            }, options.timeout);
+              reject(new Error(`Timeout of ${options.timeout} ms has been expired for a request to "${adapter.config.description}"`))
+            }, options.timeout)
           }
 
           try {
             adapter[lookupFunction](lemma)
               .then(value => {
-                console.log(`A definition object has been returned from "${adapter.config.description}"`, value);
-                if (timeout) { window.clearTimeout(timeout); }
+                console.log(`A definition object has been returned from "${adapter.config.description}"`, value)
+                if (timeout) { window.clearTimeout(timeout) }
                 // value is a Definition object wrapped in a Proxy
-                resolve(value);
+                resolve(value)
               }).catch(error => {
-                if (timeout) { window.clearTimeout(timeout); }
-                reject(error);
-              });
+                if (timeout) { window.clearTimeout(timeout) }
+                reject(error)
+              })
           } catch (error) {
-            reject(error);
+            reject(error)
           }
         })
-      });
+      })
 
       return requests
     } catch (error) {
-      console.log(`Unable to fetch full definitions due to: ${error}`);
+      console.log(`Unable to fetch full definitions due to: ${error}`)
       return []
     }
   }
@@ -1957,10 +2126,10 @@ class Lexicons {
    * @return the list of applicable Adapters
    */
   static _filterAdapters (lemma, options) {
-    console.log('Request Options', options);
-    let adapters = Lexicons.getLexiconAdapters(lemma.languageID);
+    console.log('Request Options', options)
+    let adapters = Lexicons.getLexiconAdapters(lemma.languageID)
     if (adapters && options.allow) {
-      adapters = adapters.filter((a) => options.allow.includes(a.lexid));
+      adapters = adapters.filter((a) => options.allow.includes(a.lexid))
     }
     if (!adapters || adapters.length === 0) { return [] } // No adapters found for this language
     return adapters
@@ -1974,13 +2143,29 @@ class Lexicons {
   static getLexiconAdapters (languageID) {
     if (!lexicons.has(languageID)) {
       // As getLexicons need a language code, let's convert a language ID to a code
-      let languageCode = LanguageModelFactory.getLanguageCodeFromId(languageID);
+      let languageCode = alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["LanguageModelFactory"].getLanguageCodeFromId(languageID)
 
-      let lexiconsList = AlpheiosLexAdapter.getLexicons(languageCode);
-      lexicons.set(languageID, Array.from(lexiconsList.keys()).map(id => new AlpheiosLexAdapter(id)));
+      let lexiconsList = _alpheios_alpheios_adapter__WEBPACK_IMPORTED_MODULE_1__["default"].getLexicons(languageCode)
+      lexicons.set(languageID, Array.from(lexiconsList.keys()).map(id => new _alpheios_alpheios_adapter__WEBPACK_IMPORTED_MODULE_1__["default"](id)))
     }
     return lexicons.get(languageID)
   }
 }
 
-export { Lexicons, AlpheiosLexAdapter };
+
+/***/ }),
+
+/***/ "alpheios-data-models":
+/*!***************************************!*\
+  !*** external "alpheios-data-models" ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE_alpheios_data_models__;
+
+/***/ })
+
+/******/ });
+});
+//# sourceMappingURL=alpheios-lexicon-client.js.map
