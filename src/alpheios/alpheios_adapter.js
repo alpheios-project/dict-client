@@ -65,13 +65,13 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
     for (let r of requests) {
       let p = new Promise((resolve, reject) => {
         window.fetch(r).then(
-            function (response) {
-              let text = response.text()
-              resolve(text)
-            }
-          ).catch((error) => {
-            reject(error)
-          })
+          function (response) {
+            let text = response.text()
+            resolve(text)
+          }
+        ).catch((error) => {
+          reject(error)
+        })
       }).then((result) => {
         if (result.match(/No entries found/)) {
           throw new Error('Not Found')
@@ -190,13 +190,13 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
     // TODO figure out best way to load this data
     return new Promise((resolve, reject) => {
       window.fetch(url).then(
-          function (response) {
-            let text = response.text()
-            resolve(text)
-          }
-        ).catch((error) => {
-          reject(error)
-        })
+        function (response) {
+          let text = response.text()
+          resolve(text)
+        }
+      ).catch((error) => {
+        reject(error)
+      })
     })
   }
 
