@@ -47,7 +47,7 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
     }
     let ids
     if (this.index) {
-      let model = LanguageModelFactory.getLanguageForCode(lemma.language)
+      let model = LanguageModelFactory.getLanguageModel(lemma.languageID)
       ids = this._lookupInDataIndex(this.index, lemma, model)
     }
     let url = this.getConfig('urls').full
@@ -113,7 +113,7 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
       let parsed = papaparse.parse(unparsed, {quoteChar: '\u{0000}', delimiter: '|'})
       this.data = this._fillMap(parsed.data)
     }
-    let model = LanguageModelFactory.getLanguageForCode(lemma.language)
+    let model = LanguageModelFactory.getLanguageModel(lemma.languageID)
     let deftexts = this._lookupInDataIndex(this.data, lemma, model)
     let promises = []
     if (deftexts) {
