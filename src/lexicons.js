@@ -20,8 +20,8 @@ export default class Lexicons {
    * @param options
    * @return {Promise[]}
    */
-  static fetchShortDefs (lemma, options = {}) {
-    return Lexicons.fetchDefinitions(lemma, options, 'lookupShortDef')
+  static fetchShortDefs (lemma, options = {}, logger) {
+    return Lexicons.fetchDefinitions(lemma, options, 'lookupShortDef', logger)
   }
 
   /**
@@ -30,8 +30,8 @@ export default class Lexicons {
    * @param options
    * @return {Promise[]}
    */
-  static fetchFullDefs (lemma, options = {}) {
-    return Lexicons.fetchDefinitions(lemma, options, 'lookupFullDef')
+  static fetchFullDefs (lemma, options = {}, logger) {
+    return Lexicons.fetchDefinitions(lemma, options, 'lookupFullDef', logger)
   }
 
   /**
@@ -42,13 +42,17 @@ export default class Lexicons {
    * @return {Promise[]} Array of Promises, one for each request. They will be either fulfilled with
    * a Definition object or resolved with an error if request cannot be made/failed/timeout expired.
    */
-  static fetchDefinitions (lemma, requestOptions, lookupFunction) {
+  static fetchDefinitions (lemma, requestOptions, lookupFunction, logger) {
     let options = Object.assign(Lexicons.defaults, requestOptions)
     let requests = []
     try {
-      let adapters = Lexicons._filterAdapters(lemma, requestOptions)
+      let adapters = Lexicons._filterAdapters(lemma, requestOptions, logger)
       requests = adapters.map(adapter => {
-        console.log(`Preparing a request to "${adapter.config.description}"`)
+        if (logger) {
+          logger.log(`Preparing a request to "${adapter.config.description}"`)
+        } else {
+          console.log(`Preparing a request to "${adapter.config.description}"`)
+        }
         return new Promise((resolve, reject) => {
           let timeout = 0
           if (options.timeout > 0) {
@@ -60,7 +64,11 @@ export default class Lexicons {
           try {
             adapter[lookupFunction](lemma)
               .then(value => {
-                console.log(`A definition object has been returned from "${adapter.config.description}"`, value)
+                if (logger) {
+                  logger.log(`A definition object has been returned from "${adapter.config.description}"`, value)
+                } else {
+                  console.log(`A definition object has been returned from "${adapter.config.description}"`, value)
+                }
                 if (timeout) { window.clearTimeout(timeout) }
                 // value is a Definition object wrapped in a Proxy
                 resolve(value)
@@ -76,7 +84,11 @@ export default class Lexicons {
 
       return requests
     } catch (error) {
-      console.log(`Unable to fetch full definitions due to: ${error}`)
+      if (logger) {
+        logger.log(`Unable to fetch full definitions due to: ${error}`)
+      } else {
+        console.log(`Unable to fetch full definitions due to: ${error}`)
+      }
       return []
     }
   }
@@ -87,8 +99,12 @@ export default class Lexicons {
    * @param {Object} objects - the request options
    * @return the list of applicable Adapters
    */
-  static _filterAdapters (lemma, options) {
-    console.log('Request Options', options)
+  static _filterAdapters (lemma, options, logger) {
+    if (logger) {
+      logger.log('Request Options', options)
+    } else {
+      console.log('Request Options', options)
+    }
     let adapters = Lexicons.getLexiconAdapters(lemma.languageID)
     if (adapters && options.allow) {
       adapters = adapters.filter((a) => options.allow.includes(a.lexid))

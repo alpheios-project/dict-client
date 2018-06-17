@@ -46,17 +46,32 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
 /******/ 		}
 /******/ 	};
 /******/
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -1753,7 +1768,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var alpheios_data_models__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! alpheios-data-models */ "alpheios-data-models");
 /* harmony import */ var alpheios_data_models__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(alpheios_data_models__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _config_json__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./config.json */ "./alpheios/config.json");
-var _config_json__WEBPACK_IMPORTED_MODULE_3___namespace = /*#__PURE__*/Object.assign({}, _config_json__WEBPACK_IMPORTED_MODULE_3__, {"default": _config_json__WEBPACK_IMPORTED_MODULE_3__});
+var _config_json__WEBPACK_IMPORTED_MODULE_3___namespace = /*#__PURE__*/__webpack_require__.t(/*! ./config.json */ "./alpheios/config.json", 1);
 
 
 
@@ -2123,8 +2138,8 @@ class Lexicons {
    * @param options
    * @return {Promise[]}
    */
-  static fetchShortDefs (lemma, options = {}) {
-    return Lexicons.fetchDefinitions(lemma, options, 'lookupShortDef')
+  static fetchShortDefs (lemma, options = {}, logger) {
+    return Lexicons.fetchDefinitions(lemma, options, 'lookupShortDef', logger)
   }
 
   /**
@@ -2133,8 +2148,8 @@ class Lexicons {
    * @param options
    * @return {Promise[]}
    */
-  static fetchFullDefs (lemma, options = {}) {
-    return Lexicons.fetchDefinitions(lemma, options, 'lookupFullDef')
+  static fetchFullDefs (lemma, options = {}, logger) {
+    return Lexicons.fetchDefinitions(lemma, options, 'lookupFullDef', logger)
   }
 
   /**
@@ -2145,13 +2160,17 @@ class Lexicons {
    * @return {Promise[]} Array of Promises, one for each request. They will be either fulfilled with
    * a Definition object or resolved with an error if request cannot be made/failed/timeout expired.
    */
-  static fetchDefinitions (lemma, requestOptions, lookupFunction) {
+  static fetchDefinitions (lemma, requestOptions, lookupFunction, logger) {
     let options = Object.assign(Lexicons.defaults, requestOptions)
     let requests = []
     try {
-      let adapters = Lexicons._filterAdapters(lemma, requestOptions)
+      let adapters = Lexicons._filterAdapters(lemma, requestOptions, logger)
       requests = adapters.map(adapter => {
-        console.log(`Preparing a request to "${adapter.config.description}"`)
+        if (logger) {
+          logger.log(`Preparing a request to "${adapter.config.description}"`)
+        } else {
+          console.log(`Preparing a request to "${adapter.config.description}"`)
+        }
         return new Promise((resolve, reject) => {
           let timeout = 0
           if (options.timeout > 0) {
@@ -2163,7 +2182,11 @@ class Lexicons {
           try {
             adapter[lookupFunction](lemma)
               .then(value => {
-                console.log(`A definition object has been returned from "${adapter.config.description}"`, value)
+                if (logger) {
+                  logger.log(`A definition object has been returned from "${adapter.config.description}"`, value)
+                } else {
+                  console.log(`A definition object has been returned from "${adapter.config.description}"`, value)
+                }
                 if (timeout) { window.clearTimeout(timeout) }
                 // value is a Definition object wrapped in a Proxy
                 resolve(value)
@@ -2179,7 +2202,11 @@ class Lexicons {
 
       return requests
     } catch (error) {
-      console.log(`Unable to fetch full definitions due to: ${error}`)
+      if (logger) {
+        logger.log(`Unable to fetch full definitions due to: ${error}`)
+      } else {
+        console.log(`Unable to fetch full definitions due to: ${error}`)
+      }
       return []
     }
   }
@@ -2190,8 +2217,12 @@ class Lexicons {
    * @param {Object} objects - the request options
    * @return the list of applicable Adapters
    */
-  static _filterAdapters (lemma, options) {
-    console.log('Request Options', options)
+  static _filterAdapters (lemma, options, logger) {
+    if (logger) {
+      logger.log('Request Options', options)
+    } else {
+      console.log('Request Options', options)
+    }
     let adapters = Lexicons.getLexiconAdapters(lemma.languageID)
     if (adapters && options.allow) {
       adapters = adapters.filter((a) => options.allow.includes(a.lexid))
