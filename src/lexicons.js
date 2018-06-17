@@ -99,7 +99,7 @@ export default class Lexicons {
    * @param {Object} objects - the request options
    * @return the list of applicable Adapters
    */
-  static _filterAdapters (lemma, options, logger) {
+  static _filterAdapters (lemma, options, logger = null) {
     if (logger) {
       logger.log('Request Options', options)
     } else {
