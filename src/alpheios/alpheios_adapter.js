@@ -36,7 +36,7 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
     this.provider = new ResourceProvider(this.lexid, this.config.rights)
   }
 
-  fetchShortDefWindow (requests, lemma) {
+  fetchFullDefWindow (requests, lemma) {
     let targetLanguage = this.getConfig('langs').target
     let promises = []
     for (let r of requests) {
@@ -71,8 +71,9 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
     )
   }
 
-  async fetchShortDefAxios (requests, lemma) {
+  async fetchFullDefAxios (requests, lemma) {
     let targetLanguage = this.getConfig('langs').target
+    let values = []
     for (let url of requests) {
       try {
         let response = await axios.get(url)
@@ -82,12 +83,15 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
           throw new Error('Not Found')
         } else {
           let def = new Definition(result, targetLanguage, 'text/html', lemma.word)
+
           ResourceProvider.getProxy(this.provider, def)
+          values.push(def)
         }
       } catch (err) {
         console.error('Error with request ', url, err)
       }
     }
+    return values
   }
   /**
    * @override BaseLexiconAdapter#lookupFullDef
@@ -116,9 +120,9 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
       requests.push(`${url}&l=${lemma.word}`)
     }
     if (typeof window !== 'undefined') {
-      return this.fetchShortDefWindow(requests, lemma)
+      return this.fetchFullDefWindow(requests, lemma)
     } else {
-      return this.fetchShortDefAxios(requests, lemma)
+      return this.fetchFullDefAxios(requests, lemma)
     }
   }
 
@@ -209,13 +213,7 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
     return found
   }
 
-  /**
-   * Loads a data file from a URL
-   * @param {string} url - the url of the file
-   * @returns {Promise} a Promise that resolves to the text contents of the loaded file
-   */
-  _loadData (url) {
-    // TODO figure out best way to load this data
+  fetchWindow (url) {
     return new Promise((resolve, reject) => {
       window.fetch(url).then(
         function (response) {
@@ -226,6 +224,25 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
         reject(error)
       })
     })
+  }
+
+  async fetchAxios (url) {
+    let res = await axios.get(encodeURI(url))
+    return res.data
+  }
+
+  /**
+   * Loads a data file from a URL
+   * @param {string} url - the url of the file
+   * @returns {Promise} a Promise that resolves to the text contents of the loaded file
+   */
+  _loadData (url) {
+    // TODO figure out best way to load this data
+    if (typeof window !== 'undefined') {
+      return this.fetchWindow(url)
+    } else {
+      return this.fetchAxios(url)
+    }
   }
 
   /**

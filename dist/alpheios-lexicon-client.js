@@ -5091,7 +5091,7 @@ class AlpheiosLexAdapter extends _base_adapter_js__WEBPACK_IMPORTED_MODULE_0__["
     this.provider = new alpheios_data_models__WEBPACK_IMPORTED_MODULE_2__["ResourceProvider"](this.lexid, this.config.rights)
   }
 
-  fetchShortDefWindow (requests, lemma) {
+  fetchFullDefWindow (requests, lemma) {
     let targetLanguage = this.getConfig('langs').target
     let promises = []
     for (let r of requests) {
@@ -5126,8 +5126,9 @@ class AlpheiosLexAdapter extends _base_adapter_js__WEBPACK_IMPORTED_MODULE_0__["
     )
   }
 
-  async fetchShortDefAxios (requests, lemma) {
+  async fetchFullDefAxios (requests, lemma) {
     let targetLanguage = this.getConfig('langs').target
+    let values = []
     for (let url of requests) {
       try {
         let response = await axios__WEBPACK_IMPORTED_MODULE_4___default.a.get(url)
@@ -5137,12 +5138,15 @@ class AlpheiosLexAdapter extends _base_adapter_js__WEBPACK_IMPORTED_MODULE_0__["
           throw new Error('Not Found')
         } else {
           let def = new alpheios_data_models__WEBPACK_IMPORTED_MODULE_2__["Definition"](result, targetLanguage, 'text/html', lemma.word)
+
           alpheios_data_models__WEBPACK_IMPORTED_MODULE_2__["ResourceProvider"].getProxy(this.provider, def)
+          values.push(def)
         }
       } catch (err) {
         console.error('Error with request ', url, err)
       }
     }
+    return values
   }
   /**
    * @override BaseLexiconAdapter#lookupFullDef
@@ -5171,9 +5175,9 @@ class AlpheiosLexAdapter extends _base_adapter_js__WEBPACK_IMPORTED_MODULE_0__["
       requests.push(`${url}&l=${lemma.word}`)
     }
     if (typeof window !== 'undefined') {
-      return this.fetchShortDefWindow(requests, lemma)
+      return this.fetchFullDefWindow(requests, lemma)
     } else {
-      return this.fetchShortDefAxios(requests, lemma)
+      return this.fetchFullDefAxios(requests, lemma)
     }
   }
 
@@ -5264,13 +5268,7 @@ class AlpheiosLexAdapter extends _base_adapter_js__WEBPACK_IMPORTED_MODULE_0__["
     return found
   }
 
-  /**
-   * Loads a data file from a URL
-   * @param {string} url - the url of the file
-   * @returns {Promise} a Promise that resolves to the text contents of the loaded file
-   */
-  _loadData (url) {
-    // TODO figure out best way to load this data
+  fetchWindow (url) {
     return new Promise((resolve, reject) => {
       window.fetch(url).then(
         function (response) {
@@ -5281,6 +5279,25 @@ class AlpheiosLexAdapter extends _base_adapter_js__WEBPACK_IMPORTED_MODULE_0__["
         reject(error)
       })
     })
+  }
+
+  async fetchAxios (url) {
+    let res = await axios__WEBPACK_IMPORTED_MODULE_4___default.a.get(encodeURI(url))
+    return res.data
+  }
+
+  /**
+   * Loads a data file from a URL
+   * @param {string} url - the url of the file
+   * @returns {Promise} a Promise that resolves to the text contents of the loaded file
+   */
+  _loadData (url) {
+    // TODO figure out best way to load this data
+    if (typeof window !== 'undefined') {
+      return this.fetchWindow(url)
+    } else {
+      return this.fetchAxios(url)
+    }
   }
 
   /**
@@ -5478,24 +5495,42 @@ class Lexicons {
     try {
       let adapters = Lexicons._filterAdapters(lemma, requestOptions)
       requests = adapters.map(adapter => {
-        console.log(`Preparing a request to "${adapter.config.description}"`)
+        // console.log(`Preparing a request to "${adapter.config.description}"`)
         return new Promise((resolve, reject) => {
           let timeout = 0
           if (options.timeout > 0) {
-            timeout = window.setTimeout(() => {
-              reject(new Error(`Timeout of ${options.timeout} ms has been expired for a request to "${adapter.config.description}"`))
-            }, options.timeout)
+            if (typeof window !== 'undefined') {
+              timeout = window.setTimeout(() => {
+                reject(new Error(`Timeout of ${options.timeout} ms has been expired for a request to "${adapter.config.description}"`))
+              }, options.timeout)
+            } else {
+              timeout = setTimeout(() => {
+                reject(new Error(`Timeout of ${options.timeout} ms has been expired for a request to "${adapter.config.description}"`))
+              }, options.timeout)
+            }
           }
 
           try {
             adapter[lookupFunction](lemma)
               .then(value => {
-                console.log(`A definition object has been returned from "${adapter.config.description}"`, value)
-                if (timeout) { window.clearTimeout(timeout) }
+                // console.log(`A definition object has been returned from "${adapter.config.description}"`, value)
+                if (timeout) {
+                  if (typeof window !== 'undefined') {
+                    window.clearTimeout(timeout)
+                  } else {
+                    clearTimeout(timeout)
+                  }
+                }
                 // value is a Definition object wrapped in a Proxy
                 resolve(value)
               }).catch(error => {
-                if (timeout) { window.clearTimeout(timeout) }
+                if (timeout) {
+                  if (typeof window !== 'undefined') {
+                    window.clearTimeout(timeout)
+                  } else {
+                    clearTimeout(timeout)
+                  }
+                }
                 reject(error)
               })
           } catch (error) {
@@ -5518,7 +5553,7 @@ class Lexicons {
    * @return the list of applicable Adapters
    */
   static _filterAdapters (lemma, options) {
-    console.log('Request Options', options)
+    // console.log('Request Options', options)
     let adapters = Lexicons.getLexiconAdapters(lemma.languageID)
     if (adapters && options.allow) {
       adapters = adapters.filter((a) => options.allow.includes(a.lexid))
