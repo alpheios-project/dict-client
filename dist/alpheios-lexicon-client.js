@@ -5131,7 +5131,7 @@ class AlpheiosLexAdapter extends _base_adapter_js__WEBPACK_IMPORTED_MODULE_0__["
     let values = []
     for (let url of requests) {
       try {
-        let response = await axios__WEBPACK_IMPORTED_MODULE_4___default.a.get(url)
+        let response = await axios__WEBPACK_IMPORTED_MODULE_4___default.a.get(encodeURI(url))
         let result = response.data
 
         if (result.match(/No entries found/)) {
@@ -5143,7 +5143,7 @@ class AlpheiosLexAdapter extends _base_adapter_js__WEBPACK_IMPORTED_MODULE_0__["
           values.push(def)
         }
       } catch (err) {
-        console.error('Error with request ', url, err)
+        console.error('Error with request ', url, err.message)
       }
     }
     return values
@@ -5164,8 +5164,12 @@ class AlpheiosLexAdapter extends _base_adapter_js__WEBPACK_IMPORTED_MODULE_0__["
       let model = alpheios_data_models__WEBPACK_IMPORTED_MODULE_2__["LanguageModelFactory"].getLanguageModel(lemma.languageID)
       ids = this._lookupInDataIndex(this.index, lemma, model)
     }
+
     let url = this.getConfig('urls').full
-    if (!url) { throw new Error(`URL data is not available`) }
+    if (!url) {
+      console.error(`URL data is not available`)
+      return
+    }
     let requests = []
     if (ids) {
       for (let id of ids) {
