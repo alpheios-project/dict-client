@@ -3,6 +3,8 @@ import papaparse from 'papaparse'
 import { Definition, ResourceProvider, LanguageModelFactory } from 'alpheios-data-models'
 import DefaultConfig from './config.json'
 
+import axios from 'axios'
+
 class AlpheiosLexAdapter extends BaseLexiconAdapter {
   /**
    * A Client Adapter for the Alpheios V1 Lexicon service
@@ -34,32 +36,7 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
     this.provider = new ResourceProvider(this.lexid, this.config.rights)
   }
 
-  /**
-   * @override BaseLexiconAdapter#lookupFullDef
-   */
-  async lookupFullDef (lemma = null) {
-    // TODO figure out the best way to handle initial reading of the data file
-    if (this.index === null && this.getConfig('urls').index) {
-      let url = this.getConfig('urls').index
-      let unparsed = await this._loadData(url)
-      let parsed = papaparse.parse(unparsed, {})
-      this.index = this._fillMap(parsed.data)
-    }
-    let ids
-    if (this.index) {
-      let model = LanguageModelFactory.getLanguageModel(lemma.languageID)
-      ids = this._lookupInDataIndex(this.index, lemma, model)
-    }
-    let url = this.getConfig('urls').full
-    if (!url) { throw new Error(`URL data is not available`) }
-    let requests = []
-    if (ids) {
-      for (let id of ids) {
-        requests.push(`${url}&n=${id}`)
-      }
-    } else {
-      requests.push(`${url}&l=${lemma.word}`)
-    }
+  fetchShortDefWindow (requests, lemma) {
     let targetLanguage = this.getConfig('langs').target
     let promises = []
     for (let r of requests) {
@@ -92,6 +69,57 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
         // quietly fail?
       }
     )
+  }
+
+  async fetchShortDefAxios (requests, lemma) {
+    let targetLanguage = this.getConfig('langs').target
+    for (let url of requests) {
+      try {
+        let response = await axios.get(url)
+        let result = response.data
+
+        if (result.match(/No entries found/)) {
+          throw new Error('Not Found')
+        } else {
+          let def = new Definition(result, targetLanguage, 'text/html', lemma.word)
+          ResourceProvider.getProxy(this.provider, def)
+        }
+      } catch (err) {
+        console.error('Error with request ', url, err)
+      }
+    }
+  }
+  /**
+   * @override BaseLexiconAdapter#lookupFullDef
+   */
+  async lookupFullDef (lemma = null) {
+    // TODO figure out the best way to handle initial reading of the data file
+    if (this.index === null && this.getConfig('urls').index) {
+      let url = this.getConfig('urls').index
+      let unparsed = await this._loadData(url)
+      let parsed = papaparse.parse(unparsed, {})
+      this.index = this._fillMap(parsed.data)
+    }
+    let ids
+    if (this.index) {
+      let model = LanguageModelFactory.getLanguageModel(lemma.languageID)
+      ids = this._lookupInDataIndex(this.index, lemma, model)
+    }
+    let url = this.getConfig('urls').full
+    if (!url) { throw new Error(`URL data is not available`) }
+    let requests = []
+    if (ids) {
+      for (let id of ids) {
+        requests.push(`${url}&n=${id}`)
+      }
+    } else {
+      requests.push(`${url}&l=${lemma.word}`)
+    }
+    if (typeof window !== 'undefined') {
+      return this.fetchShortDefWindow(requests, lemma)
+    } else {
+      return this.fetchShortDefAxios(requests, lemma)
+    }
   }
 
   /**

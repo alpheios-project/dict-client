@@ -3,7 +3,8 @@ const webpack = {
     entry: './driver.js',
     externals: {
       'alpheios-data-models': 'alpheios-data-models'
-    }
+    },
+    target: "node"
   },
 
   production: {
