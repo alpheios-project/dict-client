@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/alpheios-project/lexicon-client#readme",
   "devDependencies": {
-    "alpheios-data-models": "git://github.com/alpheios-project/data-models.git#for-cmdtools",
+    "alpheios-data-models": "git://github.com/alpheios-project/data-models.git",
     "alpheios-node-build": "git://github.com/alpheios-project/node-build.git",
     "babel-jest": "^21.2.0",
     "babel-preset-es2015": "^6.24.1",

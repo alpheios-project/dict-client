@@ -5499,7 +5499,9 @@ class Lexicons {
     try {
       let adapters = Lexicons._filterAdapters(lemma, requestOptions)
       requests = adapters.map(adapter => {
-        // console.log(`Preparing a request to "${adapter.config.description}"`)
+        if (typeof window !== 'undefined') {
+          console.log(`Preparing a request to "${adapter.config.description}"`)
+        }
         return new Promise((resolve, reject) => {
           let timeout = 0
           if (options.timeout > 0) {
@@ -5517,7 +5519,9 @@ class Lexicons {
           try {
             adapter[lookupFunction](lemma)
               .then(value => {
-                // console.log(`A definition object has been returned from "${adapter.config.description}"`, value)
+                if (typeof window !== 'undefined') {
+                  console.log(`A definition object has been returned from "${adapter.config.description}"`, value)
+                }
                 if (timeout) {
                   if (typeof window !== 'undefined') {
                     window.clearTimeout(timeout)
@@ -5557,7 +5561,9 @@ class Lexicons {
    * @return the list of applicable Adapters
    */
   static _filterAdapters (lemma, options) {
-    // console.log('Request Options', options)
+    if (typeof window !== 'undefined') {
+      console.log('Request Options', options)
+    }
     let adapters = Lexicons.getLexiconAdapters(lemma.languageID)
     if (adapters && options.allow) {
       adapters = adapters.filter((a) => options.allow.includes(a.lexid))
