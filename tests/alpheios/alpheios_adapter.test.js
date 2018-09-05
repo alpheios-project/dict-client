@@ -1,6 +1,7 @@
 /* eslint-env jest */
 'use strict'
 import AlpheiosLexAdapter from '../../src/alpheios/alpheios_adapter.js'
+import { Constants } from 'alpheios-data-models'
 let lsj = 'https://github.com/alpheios-project/lsj'
 
 describe('BaseAdapter object', () => {
@@ -28,7 +29,7 @@ describe('BaseAdapter object', () => {
   test('getShortDef', async () => {
     let mockLemma = {
       word: 'mare',
-      language: 'lat',
+      languageID: Constants.LANG_LATIN,
       principalParts: [],
       features: {}
     }
@@ -45,7 +46,7 @@ describe('BaseAdapter object', () => {
   test('getShortDef multiples', async () => {
     let mockLemma = {
       word: 'mare',
-      language: 'lat',
+      languageID: Constants.LANG_LATIN,
       principalParts: [],
       features: {}
     }
@@ -63,7 +64,7 @@ describe('BaseAdapter object', () => {
   test('getFullDef', async () => {
     let mockLemma = {
       word: 'mare',
-      language: 'lat',
+      languageID: Constants.LANG_LATIN,
       principalParts: [],
       features: {}
     }
@@ -78,7 +79,7 @@ describe('BaseAdapter object', () => {
   test('getShortDef multiples', async () => {
     let mockLemma = {
       word: 'mare',
-      language: 'lat',
+      languageID: Constants.LANG_LATIN,
       principalParts: [],
       features: {}
     }
@@ -94,6 +95,7 @@ describe('BaseAdapter object', () => {
   test('load data', async () => {
     let mockLemma = {
       word: 'foo',
+      languageID: Constants.LANG_GREEK,
       language: 'grc',
       principalParts: [],
       features: {}
@@ -108,19 +110,19 @@ describe('BaseAdapter object', () => {
   test('lookup enforced capital', async () => {
     let mock = {
       word: 'Εὐκράς',
-      language: 'grc',
+      languageID: Constants.LANG_GREEK,
       principalParts: [],
       features: {}
     }
     let mock2 = {
       word: 'εὐκτέανος2',
-      language: 'grc',
+      languageID: Constants.LANG_GREEK,
       principalParts: [],
       features: {}
     }
     let mock3 = {
       word: 'nontrailing1',
-      language: 'grc',
+      languageID: Constants.LANG_GREEK,
       principalParts: [],
       features: {}
     }
@@ -139,7 +141,7 @@ describe('BaseAdapter object', () => {
   test('lookup data with alternatives', () => {
     let mockLemma = {
       word: 'mare',
-      language: 'lat',
+      languageID: Constants.LANG_LATIN,
       principalParts: [],
       features: {}
     }
@@ -155,7 +157,7 @@ describe('BaseAdapter object', () => {
   test('lookup data with alternatives and principal parts', () => {
     let mockLemma = {
       word: 'mare',
-      language: 'lat',
+      languageID: Constants.LANG_LATIN,
       principalParts: ['mere'],
       features: {}
     }

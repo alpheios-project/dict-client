@@ -1,6 +1,7 @@
 /* eslint-env jest */
 'use strict'
 import UrlLexAdapter from '../../src/url/url_adapter.js'
+import { Constants } from 'alpheios-data-models'
 
 describe('BaseAdapter object', () => {
   beforeAll(() => {
@@ -11,7 +12,7 @@ describe('BaseAdapter object', () => {
   test('getFullDef', async () => {
     let mockLemma = {
       word: 'mare',
-      language: 'lat',
+      language: Constants.LANG_LATIN,
       principalParts: [],
       features: {
         source: 'https://example.org/lexicon/mare'
