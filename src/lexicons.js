@@ -137,7 +137,7 @@ export default class Lexicons {
     }
     let adapters = lexicons.get(lemma.languageID)
     // now see if we should use a URL adapter
-    if (lemma.features[Feature.types.source] && lemma.features[Feature.types.source].match(/https?:/)) {
+    if (lemma.features[Feature.types.source] && lemma.features[Feature.types.source].value.match(/https?:/)) {
       adapters.push(new UrlLexAdapter())
     }
     return adapters

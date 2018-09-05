@@ -15,7 +15,7 @@ describe('BaseAdapter object', () => {
       language: Constants.LANG_LATIN,
       principalParts: [],
       features: {
-        source: 'https://example.org/lexicon/mare'
+        source: { value: 'https://example.org/lexicon/mare' }
       }
     }
     let adapter = new UrlLexAdapter()

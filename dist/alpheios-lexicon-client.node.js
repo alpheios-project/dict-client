@@ -5593,7 +5593,7 @@ class Lexicons {
     }
     let adapters = lexicons.get(lemma.languageID)
     // now see if we should use a URL adapter
-    if (lemma.features[alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["Feature"].types.source] && lemma.features[alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["Feature"].types.source].match(/https?:/)) {
+    if (lemma.features[alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["Feature"].types.source] && lemma.features[alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["Feature"].types.source].value.match(/https?:/)) {
       adapters.push(new _url_url_adapter__WEBPACK_IMPORTED_MODULE_2__["default"]())
     }
     return adapters
@@ -5614,6 +5614,9 @@ class Lexicons {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! alpheios-data-models */ "alpheios-data-models");
 /* harmony import */ var alpheios_data_models__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "../node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
+
 
 /**
  * Adapter Class for a Lexicon Service which retrieves a full definition from
@@ -5626,24 +5629,50 @@ class UrlLexAdapter {
    * @return {Promise} a Promise that resolves to an array of Definition objects
    */
   async lookupFullDef (lemma) {
-    let url = lemma.features[alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["Feature"].types.source]
-    return new Promise((resolve, reject) => {
-      window.fetch(url).then(
-        function (response) {
-          let text = response.text()
-          resolve(text)
+    let promises = []
+    if (lemma.features[alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["Feature"].types.source] && lemma.features[alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["Feature"].types.source].value.match(/https?:/)) {
+      let url = lemma.features[alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["Feature"].types.source]
+      promises.push(new Promise((resolve, reject) => {
+        if (typeof window !== 'undefined') {
+          window.fetch(url).then(
+            function (response) {
+              let text = response.text()
+              resolve(text)
+            }
+          ).catch((error) => {
+            reject(error)
+          })
+        } else {
+          axios__WEBPACK_IMPORTED_MODULE_1___default.a.get(url).then(
+            function (response) {
+              let text = response.text()
+              resolve(text)
+            }
+          ).catch((error) => {
+            reject(error)
+          })
         }
-      ).catch((error) => {
-        reject(error)
-      })
-    }).then((result) => {
-      if (result.match(/No entries found/)) {
-        throw new Error('Not Found')
-      } else {
-        let def = new alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["Definition"](result, lemma.languageID, 'text/html', lemma.word)
-        return alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["ResourceProvider"].getProxy(this.provider, def)
+      }).then((result) => {
+        if (result.match(/No entries found/)) {
+          throw new Error('Not Found')
+        } else {
+          let def = new alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["Definition"](result, lemma.languageID, 'text/html', lemma.word)
+          return alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["ResourceProvider"].getProxy(this.provider, def)
+        }
+      }))
+    } else {
+      promises.push(new Promise((resolve, reject) => {
+        reject(new Error('Invalid Source URL'))
+      }))
+    }
+    return Promise.all(promises).then(
+      values => {
+        return values.filter(value => { return value })
+      },
+      error => {
+        throw (error)
       }
-    })
+    )
   }
 
   /**
