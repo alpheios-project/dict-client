@@ -29,7 +29,8 @@ describe('BaseAdapter object', () => {
     let mockLemma = {
       word: 'mare',
       language: 'lat',
-      principalParts: []
+      principalParts: [],
+      features: {}
     }
     let mockDefinition = 'short definition'
     let adapter = new AlpheiosLexAdapter(lsj)
@@ -45,7 +46,8 @@ describe('BaseAdapter object', () => {
     let mockLemma = {
       word: 'mare',
       language: 'lat',
-      principalParts: []
+      principalParts: [],
+      features: {}
     }
     let mockDefinition = 'short definition'
     let mockDefinition2 = 'another definition'
@@ -62,7 +64,8 @@ describe('BaseAdapter object', () => {
     let mockLemma = {
       word: 'mare',
       language: 'lat',
-      principalParts: []
+      principalParts: [],
+      features: {}
     }
     let adapter = new AlpheiosLexAdapter(lsj)
     let dummyResponse = '<div n="abc">my def</div>'
@@ -76,7 +79,8 @@ describe('BaseAdapter object', () => {
     let mockLemma = {
       word: 'mare',
       language: 'lat',
-      principalParts: []
+      principalParts: [],
+      features: {}
     }
     let mockDefinition = 'short definition'
     let mockDefinition2 = 'another definition'
@@ -91,7 +95,8 @@ describe('BaseAdapter object', () => {
     let mockLemma = {
       word: 'foo',
       language: 'grc',
-      principalParts: []
+      principalParts: [],
+      features: {}
     }
     let adapter = new AlpheiosLexAdapter(lsj)
     let dummyResponse = `foo|n9999`
@@ -104,17 +109,20 @@ describe('BaseAdapter object', () => {
     let mock = {
       word: 'Εὐκράς',
       language: 'grc',
-      principalParts: []
+      principalParts: [],
+      features: {}
     }
     let mock2 = {
       word: 'εὐκτέανος2',
       language: 'grc',
-      principalParts: []
+      principalParts: [],
+      features: {}
     }
     let mock3 = {
       word: 'nontrailing1',
       language: 'grc',
-      principalParts: []
+      principalParts: [],
+      features: {}
     }
     let adapter = new AlpheiosLexAdapter(lsj)
     let dummyResponse = '@Εὐκράς|n44301\n@εὐκτέανος1|n44329\n@εὐκτέανος2|n44330\nεὐκράς1|@\nεὐκράς2|@\nεὐκράς|@\nεὐκτέανος2|@\nnontrailing|n99999'
@@ -132,7 +140,8 @@ describe('BaseAdapter object', () => {
     let mockLemma = {
       word: 'mare',
       language: 'lat',
-      principalParts: []
+      principalParts: [],
+      features: {}
     }
     let mockData = new Map([['more', 'n2']])
     let mockModel = {
@@ -147,7 +156,8 @@ describe('BaseAdapter object', () => {
     let mockLemma = {
       word: 'mare',
       language: 'lat',
-      principalParts: ['mere']
+      principalParts: ['mere'],
+      features: {}
     }
     let mockData = new Map([['mere', 'n1'], ['more', 'n2']])
     let mockModel = {

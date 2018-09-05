@@ -14,7 +14,8 @@ describe('Lexicons', () => {
   test('_filterAdapters', () => {
     let mockLemma = {
       languageID: LanguageModelFactory.getLanguageIdFromCode('grc'),
-      word: 'dummy'
+      word: 'dummy',
+      features: {}
     }
     let adapters = Lexicons._filterAdapters(mockLemma, {})
     expect(adapters.length).toEqual(5)

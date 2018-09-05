@@ -1,5 +1,6 @@
-import {LanguageModelFactory} from 'alpheios-data-models'
+import {LanguageModelFactory, Feature} from 'alpheios-data-models'
 import AlpheiosLexAdapter from './alpheios/alpheios_adapter'
+import UrlLexAdapter from './url/url_adapter'
 
 let lexicons = new Map() // Maps a language ID into an array of lexicons
 
@@ -89,7 +90,7 @@ export default class Lexicons {
    */
   static _filterAdapters (lemma, options) {
     console.log('Request Options', options)
-    let adapters = Lexicons.getLexiconAdapters(lemma.languageID)
+    let adapters = Lexicons.getLexiconAdapters(lemma)
     if (adapters && options.allow) {
       adapters = adapters.filter((a) => options.allow.includes(a.lexid))
     }
@@ -98,18 +99,23 @@ export default class Lexicons {
   }
 
   /**
-   * Returns a list of suitable lexicon adapters for a given language ID.
-   * @param {Symbol} languageID - A language ID of adapters returned.
+   * Returns a list of suitable lexicon adapters for a given lemma
+   * @param {Lemma} lemma - A language ID of adapters returned.
    * @return {BaseLexiconAdapter[]} An array of lexicon adapters for a given language.
    */
-  static getLexiconAdapters (languageID) {
-    if (!lexicons.has(languageID)) {
+  static getLexiconAdapters (lemma) {
+    if (!lexicons.has(lemma.languageID)) {
       // As getLexicons need a language code, let's convert a language ID to a code
-      let languageCode = LanguageModelFactory.getLanguageCodeFromId(languageID)
+      let languageCode = LanguageModelFactory.getLanguageCodeFromId(lemma.languageID)
 
       let lexiconsList = AlpheiosLexAdapter.getLexicons(languageCode)
-      lexicons.set(languageID, Array.from(lexiconsList.keys()).map(id => new AlpheiosLexAdapter(id)))
+      lexicons.set(lemma.languageID, Array.from(lexiconsList.keys()).map(id => new AlpheiosLexAdapter(id)))
     }
-    return lexicons.get(languageID)
+    let adapters = lexicons.get(lemma.languageID)
+    // now see if we should use a URL adapter
+    if (lemma.features[Feature.types.source] && lemma.features[Feature.types.source].match(/https?:/)) {
+      adapters.push(new UrlLexAdapter())
+    }
+    return adapters
   }
 }
