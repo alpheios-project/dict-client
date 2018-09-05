@@ -114,9 +114,13 @@ export default class Lexicons {
     if (typeof window !== 'undefined') {
       console.log('Request Options', options)
     }
-    let adapters = Lexicons.getLexiconAdapters(lemma)
+    let adapters = Lexicons.getLexiconAdapters(lemma.languageID)
     if (adapters && options.allow) {
       adapters = adapters.filter((a) => options.allow.includes(a.lexid))
+    }
+    // now see if we should use a URL adapter
+    if (lemma.features[Feature.types.source] && lemma.features[Feature.types.source].value.match(/https?:/)) {
+      adapters.push(new UrlLexAdapter())
     }
     if (!adapters || adapters.length === 0) { return [] } // No adapters found for this language
     return adapters
@@ -127,19 +131,14 @@ export default class Lexicons {
    * @param {Lemma} lemma - A language ID of adapters returned.
    * @return {BaseLexiconAdapter[]} An array of lexicon adapters for a given language.
    */
-  static getLexiconAdapters (lemma) {
-    if (!lexicons.has(lemma.languageID)) {
+  static getLexiconAdapters (languageID) {
+    if (!lexicons.has(languageID)) {
       // As getLexicons need a language code, let's convert a language ID to a code
-      let languageCode = LanguageModelFactory.getLanguageCodeFromId(lemma.languageID)
+      let languageCode = LanguageModelFactory.getLanguageCodeFromId(languageID)
 
       let lexiconsList = AlpheiosLexAdapter.getLexicons(languageCode)
-      lexicons.set(lemma.languageID, Array.from(lexiconsList.keys()).map(id => new AlpheiosLexAdapter(id)))
+      lexicons.set(languageID, Array.from(lexiconsList.keys()).map(id => new AlpheiosLexAdapter(id)))
     }
-    let adapters = lexicons.get(lemma.languageID)
-    // now see if we should use a URL adapter
-    if (lemma.features[Feature.types.source] && lemma.features[Feature.types.source].value.match(/https?:/)) {
-      adapters.push(new UrlLexAdapter())
-    }
-    return adapters
+    return lexicons.get(languageID)
   }
 }

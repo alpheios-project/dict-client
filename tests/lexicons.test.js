@@ -26,4 +26,14 @@ describe('Lexicons', () => {
     expect(adapters.map((a) => { return a.lexid }).includes(lsj)).toBeFalsy()
     expect(adapters.map((a) => { return a.lexid }).includes(ml)).toBeTruthy()
   })
+  test('_filterAdapters with url source', () => {
+    let mockLemma = {
+      languageID: LanguageModelFactory.getLanguageIdFromCode('gez'),
+      word: 'dummy',
+      features: { source: { value: 'https://example.org/lex/a' } }
+    }
+    let adapters = Lexicons._filterAdapters(mockLemma, {})
+    expect(adapters.length).toEqual(1)
+    expect(adapters[0].config.description).toEqual('URL Lexicon Adapter')
+  })
 })

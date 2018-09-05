@@ -5,6 +5,10 @@ import axios from 'axios'
  * the url specified in the src feature of the Lemma
  */
 class UrlLexAdapter {
+  constructor () {
+    this.config = {}
+    this.config.description = 'URL Lexicon Adapter'
+  }
   /**
    * Lookup a full definition in a lexicon
    * @param {Lemma} lemma Lemma to lookup
@@ -13,7 +17,7 @@ class UrlLexAdapter {
   async lookupFullDef (lemma) {
     let promises = []
     if (lemma.features[Feature.types.source] && lemma.features[Feature.types.source].value.match(/https?:/)) {
-      let url = lemma.features[Feature.types.source]
+      let url = lemma.features[Feature.types.source].value
       promises.push(new Promise((resolve, reject) => {
         if (typeof window !== 'undefined') {
           window.fetch(url).then(

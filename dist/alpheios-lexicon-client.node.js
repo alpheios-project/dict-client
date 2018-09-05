@@ -5570,9 +5570,13 @@ class Lexicons {
     if (typeof window !== 'undefined') {
       console.log('Request Options', options)
     }
-    let adapters = Lexicons.getLexiconAdapters(lemma)
+    let adapters = Lexicons.getLexiconAdapters(lemma.languageID)
     if (adapters && options.allow) {
       adapters = adapters.filter((a) => options.allow.includes(a.lexid))
+    }
+    // now see if we should use a URL adapter
+    if (lemma.features[alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["Feature"].types.source] && lemma.features[alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["Feature"].types.source].value.match(/https?:/)) {
+      adapters.push(new _url_url_adapter__WEBPACK_IMPORTED_MODULE_2__["default"]())
     }
     if (!adapters || adapters.length === 0) { return [] } // No adapters found for this language
     return adapters
@@ -5583,20 +5587,15 @@ class Lexicons {
    * @param {Lemma} lemma - A language ID of adapters returned.
    * @return {BaseLexiconAdapter[]} An array of lexicon adapters for a given language.
    */
-  static getLexiconAdapters (lemma) {
-    if (!lexicons.has(lemma.languageID)) {
+  static getLexiconAdapters (languageID) {
+    if (!lexicons.has(languageID)) {
       // As getLexicons need a language code, let's convert a language ID to a code
-      let languageCode = alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["LanguageModelFactory"].getLanguageCodeFromId(lemma.languageID)
+      let languageCode = alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["LanguageModelFactory"].getLanguageCodeFromId(languageID)
 
       let lexiconsList = _alpheios_alpheios_adapter__WEBPACK_IMPORTED_MODULE_1__["default"].getLexicons(languageCode)
-      lexicons.set(lemma.languageID, Array.from(lexiconsList.keys()).map(id => new _alpheios_alpheios_adapter__WEBPACK_IMPORTED_MODULE_1__["default"](id)))
+      lexicons.set(languageID, Array.from(lexiconsList.keys()).map(id => new _alpheios_alpheios_adapter__WEBPACK_IMPORTED_MODULE_1__["default"](id)))
     }
-    let adapters = lexicons.get(lemma.languageID)
-    // now see if we should use a URL adapter
-    if (lemma.features[alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["Feature"].types.source] && lemma.features[alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["Feature"].types.source].value.match(/https?:/)) {
-      adapters.push(new _url_url_adapter__WEBPACK_IMPORTED_MODULE_2__["default"]())
-    }
-    return adapters
+    return lexicons.get(languageID)
   }
 }
 
@@ -5623,6 +5622,10 @@ __webpack_require__.r(__webpack_exports__);
  * the url specified in the src feature of the Lemma
  */
 class UrlLexAdapter {
+  constructor () {
+    this.config = {}
+    this.config.description = 'URL Lexicon Adapter'
+  }
   /**
    * Lookup a full definition in a lexicon
    * @param {Lemma} lemma Lemma to lookup
@@ -5631,7 +5634,7 @@ class UrlLexAdapter {
   async lookupFullDef (lemma) {
     let promises = []
     if (lemma.features[alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["Feature"].types.source] && lemma.features[alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["Feature"].types.source].value.match(/https?:/)) {
-      let url = lemma.features[alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["Feature"].types.source]
+      let url = lemma.features[alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["Feature"].types.source].value
       promises.push(new Promise((resolve, reject) => {
         if (typeof window !== 'undefined') {
           window.fetch(url).then(
