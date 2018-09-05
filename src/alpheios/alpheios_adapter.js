@@ -3,6 +3,8 @@ import papaparse from 'papaparse'
 import { Definition, ResourceProvider, LanguageModelFactory } from 'alpheios-data-models'
 import DefaultConfig from './config.json'
 
+import axios from 'axios'
+
 class AlpheiosLexAdapter extends BaseLexiconAdapter {
   /**
    * A Client Adapter for the Alpheios V1 Lexicon service
@@ -34,32 +36,7 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
     this.provider = new ResourceProvider(this.lexid, this.config.rights)
   }
 
-  /**
-   * @override BaseLexiconAdapter#lookupFullDef
-   */
-  async lookupFullDef (lemma = null) {
-    // TODO figure out the best way to handle initial reading of the data file
-    if (this.index === null && this.getConfig('urls').index) {
-      let url = this.getConfig('urls').index
-      let unparsed = await this._loadData(url)
-      let parsed = papaparse.parse(unparsed, {})
-      this.index = this._fillMap(parsed.data)
-    }
-    let ids
-    if (this.index) {
-      let model = LanguageModelFactory.getLanguageModel(lemma.languageID)
-      ids = this._lookupInDataIndex(this.index, lemma, model)
-    }
-    let url = this.getConfig('urls').full
-    if (!url) { throw new Error(`URL data is not available`) }
-    let requests = []
-    if (ids) {
-      for (let id of ids) {
-        requests.push(`${url}&n=${id}`)
-      }
-    } else {
-      requests.push(`${url}&l=${lemma.word}`)
-    }
+  fetchFullDefWindow (requests, lemma) {
     let targetLanguage = this.getConfig('langs').target
     let promises = []
     for (let r of requests) {
@@ -94,6 +71,65 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
     )
   }
 
+  async fetchFullDefAxios (requests, lemma) {
+    let targetLanguage = this.getConfig('langs').target
+    let values = []
+    for (let url of requests) {
+      try {
+        let response = await axios.get(encodeURI(url))
+        let result = response.data
+
+        if (result.match(/No entries found/)) {
+          throw new Error('Not Found')
+        } else {
+          let def = new Definition(result, targetLanguage, 'text/html', lemma.word)
+
+          ResourceProvider.getProxy(this.provider, def)
+          values.push(def)
+        }
+      } catch (err) {
+        console.error('Error with request ', url, err.message)
+      }
+    }
+    return values
+  }
+  /**
+   * @override BaseLexiconAdapter#lookupFullDef
+   */
+  async lookupFullDef (lemma = null) {
+    // TODO figure out the best way to handle initial reading of the data file
+    if (this.index === null && this.getConfig('urls').index) {
+      let url = this.getConfig('urls').index
+      let unparsed = await this._loadData(url)
+      let parsed = papaparse.parse(unparsed, {})
+      this.index = this._fillMap(parsed.data)
+    }
+    let ids
+    if (this.index) {
+      let model = LanguageModelFactory.getLanguageModel(lemma.languageID)
+      ids = this._lookupInDataIndex(this.index, lemma, model)
+    }
+
+    let url = this.getConfig('urls').full
+    if (!url) {
+      console.error(`URL data is not available`)
+      return
+    }
+    let requests = []
+    if (ids) {
+      for (let id of ids) {
+        requests.push(`${url}&n=${id}`)
+      }
+    } else {
+      requests.push(`${url}&l=${lemma.word}`)
+    }
+    if (typeof window !== 'undefined') {
+      return this.fetchFullDefWindow(requests, lemma)
+    } else {
+      return this.fetchFullDefAxios(requests, lemma)
+    }
+  }
+
   /**
    * @override BaseLexiconAdapter#lookupShortDef
    */
@@ -110,7 +146,7 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
       // fields just use a non-printable unicode char as the quoteChar
       // (i.e. one which is unlikely to appear in the data) as the
       // in the papaparse config to prevent it from doing this
-      let parsed = papaparse.parse(unparsed, {quoteChar: '\u{0000}', delimiter: '|'})
+      let parsed = papaparse.parse(unparsed, { quoteChar: '\u{0000}', delimiter: '|' })
       this.data = this._fillMap(parsed.data)
     }
     let model = LanguageModelFactory.getLanguageModel(lemma.languageID)
@@ -181,13 +217,7 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
     return found
   }
 
-  /**
-   * Loads a data file from a URL
-   * @param {string} url - the url of the file
-   * @returns {Promise} a Promise that resolves to the text contents of the loaded file
-   */
-  _loadData (url) {
-    // TODO figure out best way to load this data
+  fetchWindow (url) {
     return new Promise((resolve, reject) => {
       window.fetch(url).then(
         function (response) {
@@ -198,6 +228,25 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
         reject(error)
       })
     })
+  }
+
+  async fetchAxios (url) {
+    let res = await axios.get(encodeURI(url))
+    return res.data
+  }
+
+  /**
+   * Loads a data file from a URL
+   * @param {string} url - the url of the file
+   * @returns {Promise} a Promise that resolves to the text contents of the loaded file
+   */
+  _loadData (url) {
+    // TODO figure out best way to load this data
+    if (typeof window !== 'undefined') {
+      return this.fetchWindow(url)
+    } else {
+      return this.fetchAxios(url)
+    }
   }
 
   /**

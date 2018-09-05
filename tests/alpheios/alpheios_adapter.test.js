@@ -15,7 +15,7 @@ describe('BaseAdapter object', () => {
   })
 
   test('default config', () => {
-    let adapter = new AlpheiosLexAdapter(lsj, {urls: {short: 'dummyurl'}})
+    let adapter = new AlpheiosLexAdapter(lsj, { urls: { short: 'dummyurl' } })
     expect(adapter.getConfig('urls').short).toEqual('dummyurl')
   })
 
