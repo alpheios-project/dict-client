@@ -10415,9 +10415,13 @@ class AlpheiosLexAdapter extends _base_adapter_js__WEBPACK_IMPORTED_MODULE_0__["
    * @override BaseLexiconAdapter#lookupShortDef
    */
   async lookupShortDef (lemma = null) {
+    let url = this.getConfig('urls').short
+    let promises = []
+    if (!url) {
+      console.log(`URL data is not available`)
+      return promises
+    }
     if (this.data === null) {
-      let url = this.getConfig('urls').short
-      if (!url) { throw new Error(`URL data is not available`) }
       let unparsed = await this._loadData(url)
       // the PapaParse algorigthm doesn't deal well with fields with start with data
       // in quotes but doesn't use quotes to enclose the entire field contents.
@@ -10432,7 +10436,6 @@ class AlpheiosLexAdapter extends _base_adapter_js__WEBPACK_IMPORTED_MODULE_0__["
     }
     let model = alpheios_data_models__WEBPACK_IMPORTED_MODULE_2__["LanguageModelFactory"].getLanguageModel(lemma.languageID)
     let deftexts = this._lookupInDataIndex(this.data, lemma, model)
-    let promises = []
     if (deftexts) {
       for (let d of deftexts) {
         promises.push(new Promise((resolve, reject) => {
@@ -10679,8 +10682,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! alpheios-data-models */ "alpheios-data-models");
 /* harmony import */ var alpheios_data_models__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _alpheios_alpheios_adapter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./alpheios/alpheios_adapter */ "./alpheios/alpheios_adapter.js");
-/* harmony import */ var _url_url_adapter__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./url/url_adapter */ "./url/url_adapter.js");
-
 
 
 
@@ -10800,17 +10801,13 @@ class Lexicons {
     if (adapters && options.allow) {
       adapters = adapters.filter((a) => options.allow.includes(a.lexid))
     }
-    // now see if we should use a URL adapter
-    if (lemma.features[alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["Feature"].types.source] && lemma.features[alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["Feature"].types.source].value.match(/https?:/)) {
-      adapters.push(new _url_url_adapter__WEBPACK_IMPORTED_MODULE_2__["default"]())
-    }
     if (!adapters || adapters.length === 0) { return [] } // No adapters found for this language
     return adapters
   }
 
   /**
-   * Returns a list of suitable lexicon adapters for a given lemma
-   * @param {Lemma} lemma - A language ID of adapters returned.
+   * Returns a list of suitable lexicon adapters for a given language ID.
+   * @param {Symbol} languageID - A language ID of adapters returned.
    * @return {BaseLexiconAdapter[]} An array of lexicon adapters for a given language.
    */
   static getLexiconAdapters (languageID) {

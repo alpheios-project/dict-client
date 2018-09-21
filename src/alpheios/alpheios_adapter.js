@@ -134,9 +134,13 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
    * @override BaseLexiconAdapter#lookupShortDef
    */
   async lookupShortDef (lemma = null) {
+    let url = this.getConfig('urls').short
+    let promises = []
+    if (!url) {
+      console.log(`URL data is not available`)
+      return promises
+    }
     if (this.data === null) {
-      let url = this.getConfig('urls').short
-      if (!url) { throw new Error(`URL data is not available`) }
       let unparsed = await this._loadData(url)
       // the PapaParse algorigthm doesn't deal well with fields with start with data
       // in quotes but doesn't use quotes to enclose the entire field contents.
@@ -151,7 +155,6 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
     }
     let model = LanguageModelFactory.getLanguageModel(lemma.languageID)
     let deftexts = this._lookupInDataIndex(this.data, lemma, model)
-    let promises = []
     if (deftexts) {
       for (let d of deftexts) {
         promises.push(new Promise((resolve, reject) => {

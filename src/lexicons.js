@@ -1,6 +1,5 @@
-import { LanguageModelFactory, Feature } from 'alpheios-data-models'
+import { LanguageModelFactory } from 'alpheios-data-models'
 import AlpheiosLexAdapter from './alpheios/alpheios_adapter'
-import UrlLexAdapter from './url/url_adapter'
 
 let lexicons = new Map() // Maps a language ID into an array of lexicons
 
@@ -118,17 +117,13 @@ export default class Lexicons {
     if (adapters && options.allow) {
       adapters = adapters.filter((a) => options.allow.includes(a.lexid))
     }
-    // now see if we should use a URL adapter
-    if (lemma.features[Feature.types.source] && lemma.features[Feature.types.source].value.match(/https?:/)) {
-      adapters.push(new UrlLexAdapter())
-    }
     if (!adapters || adapters.length === 0) { return [] } // No adapters found for this language
     return adapters
   }
 
   /**
-   * Returns a list of suitable lexicon adapters for a given lemma
-   * @param {Lemma} lemma - A language ID of adapters returned.
+   * Returns a list of suitable lexicon adapters for a given language ID.
+   * @param {Symbol} languageID - A language ID of adapters returned.
    * @return {BaseLexiconAdapter[]} An array of lexicon adapters for a given language.
    */
   static getLexiconAdapters (languageID) {
