@@ -138,35 +138,35 @@ class AlpheiosLexAdapter extends BaseLexiconAdapter {
     let promises = []
     if (!url) {
       console.log(`URL data is not available`)
-      return promises
-    }
-    if (this.data === null) {
-      let unparsed = await this._loadData(url)
-      // the PapaParse algorigthm doesn't deal well with fields with start with data
-      // in quotes but doesn't use quotes to enclose the entire field contents.
-      // eg. a row like
-      //   lemma|"some def" and more def.
-      // throws it off. Since these data files don't contain quoted
-      // fields just use a non-printable unicode char as the quoteChar
-      // (i.e. one which is unlikely to appear in the data) as the
-      // in the papaparse config to prevent it from doing this
-      let parsed = papaparse.parse(unparsed, { quoteChar: '\u{0000}', delimiter: '|' })
-      this.data = this._fillMap(parsed.data)
-    }
-    let model = LanguageModelFactory.getLanguageModel(lemma.languageID)
-    let deftexts = this._lookupInDataIndex(this.data, lemma, model)
-    if (deftexts) {
-      for (let d of deftexts) {
-        promises.push(new Promise((resolve, reject) => {
-          let def = new Definition(d, this.getConfig('langs').target, 'text/plain', lemma.word)
-          resolve(ResourceProvider.getProxy(this.provider, def))
-        }))
-      }
     } else {
-      promises.push(new Promise((resolve, reject) => {
-        reject(new Error('Not Found'))
+      if (this.data === null) {
+        let unparsed = await this._loadData(url)
+        // the PapaParse algorigthm doesn't deal well with fields with start with data
+        // in quotes but doesn't use quotes to enclose the entire field contents.
+        // eg. a row like
+        //   lemma|"some def" and more def.
+        // throws it off. Since these data files don't contain quoted
+        // fields just use a non-printable unicode char as the quoteChar
+        // (i.e. one which is unlikely to appear in the data) as the
+        // in the papaparse config to prevent it from doing this
+        let parsed = papaparse.parse(unparsed, { quoteChar: '\u{0000}', delimiter: '|' })
+        this.data = this._fillMap(parsed.data)
       }
-      ))
+      let model = LanguageModelFactory.getLanguageModel(lemma.languageID)
+      let deftexts = this._lookupInDataIndex(this.data, lemma, model)
+      if (deftexts) {
+        for (let d of deftexts) {
+          promises.push(new Promise((resolve, reject) => {
+            let def = new Definition(d, this.getConfig('langs').target, 'text/plain', lemma.word)
+            resolve(ResourceProvider.getProxy(this.provider, def))
+          }))
+        }
+      } else {
+        promises.push(new Promise((resolve, reject) => {
+          reject(new Error('Not Found'))
+        }
+        ))
+      }
     }
     return Promise.all(promises).then(
       values => {
