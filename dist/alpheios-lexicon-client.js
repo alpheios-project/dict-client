@@ -10415,9 +10415,13 @@ class AlpheiosLexAdapter extends _base_adapter_js__WEBPACK_IMPORTED_MODULE_0__["
    * @override BaseLexiconAdapter#lookupShortDef
    */
   async lookupShortDef (lemma = null) {
+    let url = this.getConfig('urls').short
+    let promises = []
+    if (!url) {
+      console.log(`URL data is not available`)
+      return promises
+    }
     if (this.data === null) {
-      let url = this.getConfig('urls').short
-      if (!url) { throw new Error(`URL data is not available`) }
       let unparsed = await this._loadData(url)
       // the PapaParse algorigthm doesn't deal well with fields with start with data
       // in quotes but doesn't use quotes to enclose the entire field contents.
@@ -10427,12 +10431,11 @@ class AlpheiosLexAdapter extends _base_adapter_js__WEBPACK_IMPORTED_MODULE_0__["
       // fields just use a non-printable unicode char as the quoteChar
       // (i.e. one which is unlikely to appear in the data) as the
       // in the papaparse config to prevent it from doing this
-      let parsed = papaparse__WEBPACK_IMPORTED_MODULE_1___default.a.parse(unparsed, {quoteChar: '\u{0000}', delimiter: '|'})
+      let parsed = papaparse__WEBPACK_IMPORTED_MODULE_1___default.a.parse(unparsed, { quoteChar: '\u{0000}', delimiter: '|' })
       this.data = this._fillMap(parsed.data)
     }
     let model = alpheios_data_models__WEBPACK_IMPORTED_MODULE_2__["LanguageModelFactory"].getLanguageModel(lemma.languageID)
     let deftexts = this._lookupInDataIndex(this.data, lemma, model)
-    let promises = []
     if (deftexts) {
       for (let d of deftexts) {
         promises.push(new Promise((resolve, reject) => {
@@ -10644,7 +10647,7 @@ class BaseLexiconAdapter {
 /*!*******************!*\
   !*** ./driver.js ***!
   \*******************/
-/*! exports provided: Lexicons, AlpheiosLexAdapter */
+/*! exports provided: Lexicons, AlpheiosLexAdapter, UrlLexAdapter */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10652,8 +10655,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _alpheios_alpheios_adapter__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./alpheios/alpheios_adapter */ "./alpheios/alpheios_adapter.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AlpheiosLexAdapter", function() { return _alpheios_alpheios_adapter__WEBPACK_IMPORTED_MODULE_0__["default"]; });
 
-/* harmony import */ var _lexicons__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./lexicons */ "./lexicons.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Lexicons", function() { return _lexicons__WEBPACK_IMPORTED_MODULE_1__["default"]; });
+/* harmony import */ var _url_url_adapter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./url/url_adapter */ "./url/url_adapter.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "UrlLexAdapter", function() { return _url_url_adapter__WEBPACK_IMPORTED_MODULE_1__["default"]; });
+
+/* harmony import */ var _lexicons__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./lexicons */ "./lexicons.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Lexicons", function() { return _lexicons__WEBPACK_IMPORTED_MODULE_2__["default"]; });
+
 
 
 
@@ -10814,6 +10821,98 @@ class Lexicons {
     return lexicons.get(languageID)
   }
 }
+
+
+/***/ }),
+
+/***/ "./url/url_adapter.js":
+/*!****************************!*\
+  !*** ./url/url_adapter.js ***!
+  \****************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! alpheios-data-models */ "alpheios-data-models");
+/* harmony import */ var alpheios_data_models__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "../node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
+
+
+/**
+ * Adapter Class for a Lexicon Service which retrieves a full definition from
+ * the url specified in the src feature of the Lemma
+ */
+class UrlLexAdapter {
+  constructor () {
+    this.config = {}
+    this.config.description = 'URL Lexicon Adapter'
+  }
+  /**
+   * Lookup a full definition in a lexicon
+   * @param {Lemma} lemma Lemma to lookup
+   * @return {Promise} a Promise that resolves to an array of Definition objects
+   */
+  async lookupFullDef (lemma) {
+    let promises = []
+    if (lemma.features[alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["Feature"].types.source] && lemma.features[alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["Feature"].types.source].value.match(/https?:/)) {
+      let url = lemma.features[alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["Feature"].types.source].value
+      promises.push(new Promise((resolve, reject) => {
+        if (typeof window !== 'undefined') {
+          window.fetch(url).then(
+            function (response) {
+              let text = response.text()
+              resolve(text)
+            }
+          ).catch((error) => {
+            reject(error)
+          })
+        } else {
+          axios__WEBPACK_IMPORTED_MODULE_1___default.a.get(url).then(
+            function (response) {
+              let text = response.text()
+              resolve(text)
+            }
+          ).catch((error) => {
+            reject(error)
+          })
+        }
+      }).then((result) => {
+        if (result.match(/No entries found/)) {
+          throw new Error('Not Found')
+        } else {
+          let def = new alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["Definition"](result, lemma.languageID, 'text/html', lemma.word)
+          return alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["ResourceProvider"].getProxy(this.provider, def)
+        }
+      }))
+    } else {
+      promises.push(new Promise((resolve, reject) => {
+        reject(new Error('Invalid Source URL'))
+      }))
+    }
+    return Promise.all(promises).then(
+      values => {
+        return values.filter(value => { return value })
+      },
+      error => {
+        throw (error)
+      }
+    )
+  }
+
+  /**
+   * Get the available lexicons provided by this adapter class for the
+   * requested language
+   * @param {string} language languageCode
+   * @return {Array} a Map of lexicon objects. Keys are lexicon uris, values are the lexicon description.
+   */
+  static getLexicons (language) {
+    return []
+  }
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (UrlLexAdapter);
 
 
 /***/ }),

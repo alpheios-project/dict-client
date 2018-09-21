@@ -1,6 +1,7 @@
 /* eslint-env jest */
 'use strict'
 import AlpheiosLexAdapter from '../../src/alpheios/alpheios_adapter.js'
+import { Constants } from 'alpheios-data-models'
 let lsj = 'https://github.com/alpheios-project/lsj'
 
 describe('BaseAdapter object', () => {
@@ -15,7 +16,7 @@ describe('BaseAdapter object', () => {
   })
 
   test('default config', () => {
-    let adapter = new AlpheiosLexAdapter(lsj, {urls: {short: 'dummyurl'}})
+    let adapter = new AlpheiosLexAdapter(lsj, { urls: { short: 'dummyurl' } })
     expect(adapter.getConfig('urls').short).toEqual('dummyurl')
   })
 
@@ -28,8 +29,9 @@ describe('BaseAdapter object', () => {
   test('getShortDef', async () => {
     let mockLemma = {
       word: 'mare',
-      language: 'lat',
-      principalParts: []
+      languageID: Constants.LANG_LATIN,
+      principalParts: [],
+      features: {}
     }
     let mockDefinition = 'short definition'
     let adapter = new AlpheiosLexAdapter(lsj)
@@ -44,8 +46,9 @@ describe('BaseAdapter object', () => {
   test('getShortDef multiples', async () => {
     let mockLemma = {
       word: 'mare',
-      language: 'lat',
-      principalParts: []
+      languageID: Constants.LANG_LATIN,
+      principalParts: [],
+      features: {}
     }
     let mockDefinition = 'short definition'
     let mockDefinition2 = 'another definition'
@@ -61,8 +64,9 @@ describe('BaseAdapter object', () => {
   test('getFullDef', async () => {
     let mockLemma = {
       word: 'mare',
-      language: 'lat',
-      principalParts: []
+      languageID: Constants.LANG_LATIN,
+      principalParts: [],
+      features: {}
     }
     let adapter = new AlpheiosLexAdapter(lsj)
     let dummyResponse = '<div n="abc">my def</div>'
@@ -75,8 +79,9 @@ describe('BaseAdapter object', () => {
   test('getShortDef multiples', async () => {
     let mockLemma = {
       word: 'mare',
-      language: 'lat',
-      principalParts: []
+      languageID: Constants.LANG_LATIN,
+      principalParts: [],
+      features: {}
     }
     let mockDefinition = 'short definition'
     let mockDefinition2 = 'another definition'
@@ -90,8 +95,10 @@ describe('BaseAdapter object', () => {
   test('load data', async () => {
     let mockLemma = {
       word: 'foo',
+      languageID: Constants.LANG_GREEK,
       language: 'grc',
-      principalParts: []
+      principalParts: [],
+      features: {}
     }
     let adapter = new AlpheiosLexAdapter(lsj)
     let dummyResponse = `foo|n9999`
@@ -103,18 +110,21 @@ describe('BaseAdapter object', () => {
   test('lookup enforced capital', async () => {
     let mock = {
       word: 'Εὐκράς',
-      language: 'grc',
-      principalParts: []
+      languageID: Constants.LANG_GREEK,
+      principalParts: [],
+      features: {}
     }
     let mock2 = {
       word: 'εὐκτέανος2',
-      language: 'grc',
-      principalParts: []
+      languageID: Constants.LANG_GREEK,
+      principalParts: [],
+      features: {}
     }
     let mock3 = {
       word: 'nontrailing1',
-      language: 'grc',
-      principalParts: []
+      languageID: Constants.LANG_GREEK,
+      principalParts: [],
+      features: {}
     }
     let adapter = new AlpheiosLexAdapter(lsj)
     let dummyResponse = '@Εὐκράς|n44301\n@εὐκτέανος1|n44329\n@εὐκτέανος2|n44330\nεὐκράς1|@\nεὐκράς2|@\nεὐκράς|@\nεὐκτέανος2|@\nnontrailing|n99999'
@@ -131,8 +141,9 @@ describe('BaseAdapter object', () => {
   test('lookup data with alternatives', () => {
     let mockLemma = {
       word: 'mare',
-      language: 'lat',
-      principalParts: []
+      languageID: Constants.LANG_LATIN,
+      principalParts: [],
+      features: {}
     }
     let mockData = new Map([['more', 'n2']])
     let mockModel = {
@@ -146,8 +157,9 @@ describe('BaseAdapter object', () => {
   test('lookup data with alternatives and principal parts', () => {
     let mockLemma = {
       word: 'mare',
-      language: 'lat',
-      principalParts: ['mere']
+      languageID: Constants.LANG_LATIN,
+      principalParts: ['mere'],
+      features: {}
     }
     let mockData = new Map([['mere', 'n1'], ['more', 'n2']])
     let mockModel = {
