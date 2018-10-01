@@ -1,4 +1,4 @@
-import { LanguageModelFactory } from 'alpheios-data-models'
+import {LanguageModelFactory} from 'alpheios-data-models'
 import AlpheiosLexAdapter from './alpheios/alpheios_adapter'
 
 let lexicons = new Map() // Maps a language ID into an array of lexicons

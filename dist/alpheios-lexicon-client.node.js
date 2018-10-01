@@ -2019,7 +2019,7 @@ module.exports = {
 /*! exports provided: _args, _development, _from, _id, _inBundle, _integrity, _location, _phantomChildren, _requested, _requiredBy, _resolved, _spec, _where, author, browser, bugs, bundlesize, dependencies, description, devDependencies, homepage, keywords, license, main, name, repository, scripts, typings, version, default */
 /***/ (function(module) {
 
-module.exports = {"_args":[["axios@0.18.0","/home/balmas/workspace/lexicon-client"]],"_development":true,"_from":"axios@0.18.0","_id":"axios@0.18.0","_inBundle":false,"_integrity":"sha1-MtU+SFHv3AoRmTts0AB4nXDAUQI=","_location":"/axios","_phantomChildren":{},"_requested":{"type":"version","registry":true,"raw":"axios@0.18.0","name":"axios","escapedName":"axios","rawSpec":"0.18.0","saveSpec":null,"fetchSpec":"0.18.0"},"_requiredBy":["#DEV:/"],"_resolved":"https://registry.npmjs.org/axios/-/axios-0.18.0.tgz","_spec":"0.18.0","_where":"/home/balmas/workspace/lexicon-client","author":{"name":"Matt Zabriskie"},"browser":{"./lib/adapters/http.js":"./lib/adapters/xhr.js"},"bugs":{"url":"https://github.com/axios/axios/issues"},"bundlesize":[{"path":"./dist/axios.min.js","threshold":"5kB"}],"dependencies":{"follow-redirects":"^1.3.0","is-buffer":"^1.1.5"},"description":"Promise based HTTP client for the browser and node.js","devDependencies":{"bundlesize":"^0.5.7","coveralls":"^2.11.9","es6-promise":"^4.0.5","grunt":"^1.0.1","grunt-banner":"^0.6.0","grunt-cli":"^1.2.0","grunt-contrib-clean":"^1.0.0","grunt-contrib-nodeunit":"^1.0.0","grunt-contrib-watch":"^1.0.0","grunt-eslint":"^19.0.0","grunt-karma":"^2.0.0","grunt-ts":"^6.0.0-beta.3","grunt-webpack":"^1.0.18","istanbul-instrumenter-loader":"^1.0.0","jasmine-core":"^2.4.1","karma":"^1.3.0","karma-chrome-launcher":"^2.0.0","karma-coverage":"^1.0.0","karma-firefox-launcher":"^1.0.0","karma-jasmine":"^1.0.2","karma-jasmine-ajax":"^0.1.13","karma-opera-launcher":"^1.0.0","karma-safari-launcher":"^1.0.0","karma-sauce-launcher":"^1.1.0","karma-sinon":"^1.0.5","karma-sourcemap-loader":"^0.3.7","karma-webpack":"^1.7.0","load-grunt-tasks":"^3.5.2","minimist":"^1.2.0","sinon":"^1.17.4","typescript":"^2.0.3","url-search-params":"^0.6.1","webpack":"^1.13.1","webpack-dev-server":"^1.14.1"},"homepage":"https://github.com/axios/axios","keywords":["xhr","http","ajax","promise","node"],"license":"MIT","main":"index.js","name":"axios","repository":{"type":"git","url":"git+https://github.com/axios/axios.git"},"scripts":{"build":"NODE_ENV=production grunt build","coveralls":"cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js","examples":"node ./examples/server.js","postversion":"git push && git push --tags","preversion":"npm test","start":"node ./sandbox/server.js","test":"grunt test && bundlesize","version":"npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json"},"typings":"./index.d.ts","version":"0.18.0"};
+module.exports = {"_args":[["axios@0.18.0","C:\\uds\\projects\\alpheios\\lexicon-client"]],"_development":true,"_from":"axios@0.18.0","_id":"axios@0.18.0","_inBundle":false,"_integrity":"sha1-MtU+SFHv3AoRmTts0AB4nXDAUQI=","_location":"/axios","_phantomChildren":{},"_requested":{"type":"version","registry":true,"raw":"axios@0.18.0","name":"axios","escapedName":"axios","rawSpec":"0.18.0","saveSpec":null,"fetchSpec":"0.18.0"},"_requiredBy":["#DEV:/"],"_resolved":"https://registry.npmjs.org/axios/-/axios-0.18.0.tgz","_spec":"0.18.0","_where":"C:\\uds\\projects\\alpheios\\lexicon-client","author":{"name":"Matt Zabriskie"},"browser":{"./lib/adapters/http.js":"./lib/adapters/xhr.js"},"bugs":{"url":"https://github.com/axios/axios/issues"},"bundlesize":[{"path":"./dist/axios.min.js","threshold":"5kB"}],"dependencies":{"follow-redirects":"^1.3.0","is-buffer":"^1.1.5"},"description":"Promise based HTTP client for the browser and node.js","devDependencies":{"bundlesize":"^0.5.7","coveralls":"^2.11.9","es6-promise":"^4.0.5","grunt":"^1.0.1","grunt-banner":"^0.6.0","grunt-cli":"^1.2.0","grunt-contrib-clean":"^1.0.0","grunt-contrib-nodeunit":"^1.0.0","grunt-contrib-watch":"^1.0.0","grunt-eslint":"^19.0.0","grunt-karma":"^2.0.0","grunt-ts":"^6.0.0-beta.3","grunt-webpack":"^1.0.18","istanbul-instrumenter-loader":"^1.0.0","jasmine-core":"^2.4.1","karma":"^1.3.0","karma-chrome-launcher":"^2.0.0","karma-coverage":"^1.0.0","karma-firefox-launcher":"^1.0.0","karma-jasmine":"^1.0.2","karma-jasmine-ajax":"^0.1.13","karma-opera-launcher":"^1.0.0","karma-safari-launcher":"^1.0.0","karma-sauce-launcher":"^1.1.0","karma-sinon":"^1.0.5","karma-sourcemap-loader":"^0.3.7","karma-webpack":"^1.7.0","load-grunt-tasks":"^3.5.2","minimist":"^1.2.0","sinon":"^1.17.4","typescript":"^2.0.3","url-search-params":"^0.6.1","webpack":"^1.13.1","webpack-dev-server":"^1.14.1"},"homepage":"https://github.com/axios/axios","keywords":["xhr","http","ajax","promise","node"],"license":"MIT","main":"index.js","name":"axios","repository":{"type":"git","url":"git+https://github.com/axios/axios.git"},"scripts":{"build":"NODE_ENV=production grunt build","coveralls":"cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js","examples":"node ./examples/server.js","postversion":"git push && git push --tags","preversion":"npm test","start":"node ./sandbox/server.js","test":"grunt test && bundlesize","version":"npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json"},"typings":"./index.d.ts","version":"0.18.0"};
 
 /***/ }),
 
@@ -5070,6 +5070,7 @@ class AlpheiosLexAdapter extends _base_adapter_js__WEBPACK_IMPORTED_MODULE_0__["
    */
   constructor (lexid = null, config = null) {
     super()
+    console.log(`constructor in alpheios lex adapter`)
     this.lexid = lexid
     this.data = null
     this.index = null
@@ -5092,6 +5093,7 @@ class AlpheiosLexAdapter extends _base_adapter_js__WEBPACK_IMPORTED_MODULE_0__["
   }
 
   fetchFullDefWindow (requests, lemma) {
+    console.log(`fetch full def window in alpheios lex adapter`)
     let targetLanguage = this.getConfig('langs').target
     let promises = []
     for (let r of requests) {
@@ -5127,6 +5129,7 @@ class AlpheiosLexAdapter extends _base_adapter_js__WEBPACK_IMPORTED_MODULE_0__["
   }
 
   async fetchFullDefAxios (requests, lemma) {
+    console.log(`fetch full defs axios in alpheios lex adapter`)
     let targetLanguage = this.getConfig('langs').target
     let values = []
     for (let url of requests) {
@@ -5152,6 +5155,7 @@ class AlpheiosLexAdapter extends _base_adapter_js__WEBPACK_IMPORTED_MODULE_0__["
    * @override BaseLexiconAdapter#lookupFullDef
    */
   async lookupFullDef (lemma = null) {
+    console.log(`lookup full defs in alpheios lex adapter`)
     // TODO figure out the best way to handle initial reading of the data file
     if (this.index === null && this.getConfig('urls').index) {
       let url = this.getConfig('urls').index
@@ -5189,6 +5193,7 @@ class AlpheiosLexAdapter extends _base_adapter_js__WEBPACK_IMPORTED_MODULE_0__["
    * @override BaseLexiconAdapter#lookupShortDef
    */
   async lookupShortDef (lemma = null) {
+    console.log(`lookup short defs in alpheios lex adapter`)
     let url = this.getConfig('urls').short
     let promises = []
     if (!url) {
@@ -5245,6 +5250,7 @@ class AlpheiosLexAdapter extends _base_adapter_js__WEBPACK_IMPORTED_MODULE_0__["
     // first look to see if we explicitly have an instance of this lemma
     // with capitalization retained
     let found
+    console.log(`lookup data index in alpheios lex adapter`)
 
     let alternatives = []
     let altEncodings = []
@@ -5276,6 +5282,7 @@ class AlpheiosLexAdapter extends _base_adapter_js__WEBPACK_IMPORTED_MODULE_0__["
   }
 
   fetchWindow (url) {
+    console.log(`fetch window in alpheios lex adapter, ${url}`)
     return new Promise((resolve, reject) => {
       window.fetch(url).then(
         function (response) {
@@ -5289,6 +5296,7 @@ class AlpheiosLexAdapter extends _base_adapter_js__WEBPACK_IMPORTED_MODULE_0__["
   }
 
   async fetchAxios (url) {
+    console.log(`fetch axios in alpheios lex adapter, ${url}`)
     let res = await axios__WEBPACK_IMPORTED_MODULE_4___default.a.get(encodeURI(url))
     return res.data
   }
@@ -5299,6 +5307,7 @@ class AlpheiosLexAdapter extends _base_adapter_js__WEBPACK_IMPORTED_MODULE_0__["
    * @returns {Promise} a Promise that resolves to the text contents of the loaded file
    */
   _loadData (url) {
+    console.log(`load data in alpheios lex adapter, ${url}`)
     // TODO figure out best way to load this data
     if (typeof window !== 'undefined') {
       return this.fetchWindow(url)
@@ -5315,6 +5324,7 @@ class AlpheiosLexAdapter extends _base_adapter_js__WEBPACK_IMPORTED_MODULE_0__["
    * @return {Map} the filled map
    */
   _fillMap (rows) {
+    console.log(`fill map in alpheios lex adapter`)
     let data = new Map()
     for (let row of rows) {
       if (data.has(row[0])) {
@@ -5339,6 +5349,7 @@ class AlpheiosLexAdapter extends _base_adapter_js__WEBPACK_IMPORTED_MODULE_0__["
    * @override BaseAdapter#getLexicons
    */
   static getLexicons (language) {
+    console.log(`get lexicons in alpheios lex adapter`)
     let fullconfig
     let lexicons = new Map()
     try {
@@ -5475,6 +5486,7 @@ class Lexicons {
    * @return {Promise[]}
    */
   static fetchShortDefs (lemma, options = {}) {
+    console.log(`fetch short definitions in lexicons`)
     return Lexicons.fetchDefinitions(lemma, options, 'lookupShortDef')
   }
 
@@ -5485,6 +5497,7 @@ class Lexicons {
    * @return {Promise[]}
    */
   static fetchFullDefs (lemma, options = {}) {
+    console.log(`fetch full definitions in lexicons`)
     return Lexicons.fetchDefinitions(lemma, options, 'lookupFullDef')
   }
 
@@ -5497,6 +5510,7 @@ class Lexicons {
    * a Definition object or resolved with an error if request cannot be made/failed/timeout expired.
    */
   static fetchDefinitions (lemma, requestOptions, lookupFunction) {
+    console.log(`fetch definitions in lexicons`)
     let options = Object.assign(Lexicons.defaults, requestOptions)
     let requests = []
     try {
@@ -5564,6 +5578,7 @@ class Lexicons {
    * @return the list of applicable Adapters
    */
   static _filterAdapters (lemma, options) {
+    console.log(`filter adapters in lexicons`)
     if (typeof window !== 'undefined') {
       console.log('Request Options', options)
     }
@@ -5585,6 +5600,7 @@ class Lexicons {
       // As getLexicons need a language code, let's convert a language ID to a code
       let languageCode = alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["LanguageModelFactory"].getLanguageCodeFromId(languageID)
 
+      console.log(`get lexicon adapters`)
       let lexiconsList = _alpheios_alpheios_adapter__WEBPACK_IMPORTED_MODULE_1__["default"].getLexicons(languageCode)
       lexicons.set(languageID, Array.from(lexiconsList.keys()).map(id => new _alpheios_alpheios_adapter__WEBPACK_IMPORTED_MODULE_1__["default"](id)))
     }

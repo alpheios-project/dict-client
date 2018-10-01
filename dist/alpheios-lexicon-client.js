@@ -10296,6 +10296,7 @@ class AlpheiosLexAdapter extends _base_adapter_js__WEBPACK_IMPORTED_MODULE_0__["
    */
   constructor (lexid = null, config = null) {
     super()
+    console.log(`constructor in alpheios lex adapter`)
     this.lexid = lexid
     this.data = null
     this.index = null
@@ -10318,6 +10319,7 @@ class AlpheiosLexAdapter extends _base_adapter_js__WEBPACK_IMPORTED_MODULE_0__["
   }
 
   fetchFullDefWindow (requests, lemma) {
+    console.log(`fetch full def window in alpheios lex adapter`)
     let targetLanguage = this.getConfig('langs').target
     let promises = []
     for (let r of requests) {
@@ -10353,6 +10355,7 @@ class AlpheiosLexAdapter extends _base_adapter_js__WEBPACK_IMPORTED_MODULE_0__["
   }
 
   async fetchFullDefAxios (requests, lemma) {
+    console.log(`fetch full defs axios in alpheios lex adapter`)
     let targetLanguage = this.getConfig('langs').target
     let values = []
     for (let url of requests) {
@@ -10378,6 +10381,7 @@ class AlpheiosLexAdapter extends _base_adapter_js__WEBPACK_IMPORTED_MODULE_0__["
    * @override BaseLexiconAdapter#lookupFullDef
    */
   async lookupFullDef (lemma = null) {
+    console.log(`lookup full defs in alpheios lex adapter`)
     // TODO figure out the best way to handle initial reading of the data file
     if (this.index === null && this.getConfig('urls').index) {
       let url = this.getConfig('urls').index
@@ -10415,6 +10419,7 @@ class AlpheiosLexAdapter extends _base_adapter_js__WEBPACK_IMPORTED_MODULE_0__["
    * @override BaseLexiconAdapter#lookupShortDef
    */
   async lookupShortDef (lemma = null) {
+    console.log(`lookup short defs in alpheios lex adapter`)
     let url = this.getConfig('urls').short
     let promises = []
     if (!url) {
@@ -10471,6 +10476,7 @@ class AlpheiosLexAdapter extends _base_adapter_js__WEBPACK_IMPORTED_MODULE_0__["
     // first look to see if we explicitly have an instance of this lemma
     // with capitalization retained
     let found
+    console.log(`lookup data index in alpheios lex adapter`)
 
     let alternatives = []
     let altEncodings = []
@@ -10502,6 +10508,7 @@ class AlpheiosLexAdapter extends _base_adapter_js__WEBPACK_IMPORTED_MODULE_0__["
   }
 
   fetchWindow (url) {
+    console.log(`fetch window in alpheios lex adapter, ${url}`)
     return new Promise((resolve, reject) => {
       window.fetch(url).then(
         function (response) {
@@ -10515,6 +10522,7 @@ class AlpheiosLexAdapter extends _base_adapter_js__WEBPACK_IMPORTED_MODULE_0__["
   }
 
   async fetchAxios (url) {
+    console.log(`fetch axios in alpheios lex adapter, ${url}`)
     let res = await axios__WEBPACK_IMPORTED_MODULE_4___default.a.get(encodeURI(url))
     return res.data
   }
@@ -10525,6 +10533,7 @@ class AlpheiosLexAdapter extends _base_adapter_js__WEBPACK_IMPORTED_MODULE_0__["
    * @returns {Promise} a Promise that resolves to the text contents of the loaded file
    */
   _loadData (url) {
+    console.log(`load data in alpheios lex adapter, ${url}`)
     // TODO figure out best way to load this data
     if (typeof window !== 'undefined') {
       return this.fetchWindow(url)
@@ -10541,6 +10550,7 @@ class AlpheiosLexAdapter extends _base_adapter_js__WEBPACK_IMPORTED_MODULE_0__["
    * @return {Map} the filled map
    */
   _fillMap (rows) {
+    console.log(`fill map in alpheios lex adapter`)
     let data = new Map()
     for (let row of rows) {
       if (data.has(row[0])) {
@@ -10565,6 +10575,7 @@ class AlpheiosLexAdapter extends _base_adapter_js__WEBPACK_IMPORTED_MODULE_0__["
    * @override BaseAdapter#getLexicons
    */
   static getLexicons (language) {
+    console.log(`get lexicons in alpheios lex adapter`)
     let fullconfig
     let lexicons = new Map()
     try {
@@ -10701,6 +10712,7 @@ class Lexicons {
    * @return {Promise[]}
    */
   static fetchShortDefs (lemma, options = {}) {
+    console.log(`fetch short definitions in lexicons`)
     return Lexicons.fetchDefinitions(lemma, options, 'lookupShortDef')
   }
 
@@ -10711,6 +10723,7 @@ class Lexicons {
    * @return {Promise[]}
    */
   static fetchFullDefs (lemma, options = {}) {
+    console.log(`fetch full definitions in lexicons`)
     return Lexicons.fetchDefinitions(lemma, options, 'lookupFullDef')
   }
 
@@ -10723,6 +10736,7 @@ class Lexicons {
    * a Definition object or resolved with an error if request cannot be made/failed/timeout expired.
    */
   static fetchDefinitions (lemma, requestOptions, lookupFunction) {
+    console.log(`fetch definitions in lexicons`)
     let options = Object.assign(Lexicons.defaults, requestOptions)
     let requests = []
     try {
@@ -10790,6 +10804,7 @@ class Lexicons {
    * @return the list of applicable Adapters
    */
   static _filterAdapters (lemma, options) {
+    console.log(`filter adapters in lexicons`)
     if (typeof window !== 'undefined') {
       console.log('Request Options', options)
     }
@@ -10811,6 +10826,7 @@ class Lexicons {
       // As getLexicons need a language code, let's convert a language ID to a code
       let languageCode = alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["LanguageModelFactory"].getLanguageCodeFromId(languageID)
 
+      console.log(`get lexicon adapters`)
       let lexiconsList = _alpheios_alpheios_adapter__WEBPACK_IMPORTED_MODULE_1__["default"].getLexicons(languageCode)
       lexicons.set(languageID, Array.from(lexiconsList.keys()).map(id => new _alpheios_alpheios_adapter__WEBPACK_IMPORTED_MODULE_1__["default"](id)))
     }
